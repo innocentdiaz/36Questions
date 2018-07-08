@@ -13,7 +13,7 @@ module.exports = (app) => {
     if (!token) return res.status(405).json({message: 'Missing token'})
     try {
       const decoded = jwt.verify(token, config.JWTkey);
-      res.status(decoded ? 200 : 406).json(decoded ? {decoded} : {message: 'Failed auth'})
+      res.status(decoded ? 200 : 406).json(decoded ? decoded : {message: 'Failed auth'})
     } catch (error) {
       res.status(400).json({message: 'Failed decode'})
     }
@@ -27,16 +27,15 @@ module.exports = (app) => {
 
     User.findOne({email: {"$regex": email, "$options": "i"}})
     .then(user => {
-      let res = bcrypt.compareSync(password, user.password);
+      let comparison = bcrypt.compareSync(password, user.password);
 
-      if (!res) return res.status(406).json({message: 'Failed authentication'});
-
-      delete user.password;
+      if (!comparison) return res.status(406).json({message: 'Failed authentication'});
       
-      var token = jwt.sign({_id: user._id, expiresIn: 1000 * 60 * 60 * 24}, config.JWTkey);
+      var token = jwt.sign({user, expiresIn: 1000 * 60 * 60 * 24}, config.JWTkey);
       res.status(200).json({user, token});
     })
     .catch(err => {
+      console.log(err)
       res.status(404).json({message: 'Could not find user'})
     })
 
