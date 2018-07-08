@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-const userReducer = (state = {}, action) => {
+const userReducer = (state = false, action) => {
   switch(action.type) {
     case "SET_USER":
       return action.payload
