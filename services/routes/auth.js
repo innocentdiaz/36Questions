@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
 const url = require('url');
+const User = require('../../lib/schemas/User');
+const bcrypt = require('bcrypt');
 
 module.exports = (app) => {
   app.get('/api/auth', (req, res) => {
@@ -23,7 +25,20 @@ module.exports = (app) => {
 
     if (!email || !password) res.status(405).json({message: 'Missing field(s)'});
 
-    var token = jwt.sign({email, password, expiresIn: 1000 * 60 * 60 * 24}, config.JWTkey);
-    res.status(200).json({token});
+    User.findOne({email: {"$regex": email, "$options": "i"}})
+    .then(user => {
+      let res = bcrypt.compareSync(password, user.password);
+
+      if (!res) return res.status(406).json({message: 'Failed authentication'});
+
+      delete user.password;
+      
+      var token = jwt.sign({_id: user._id, expiresIn: 1000 * 60 * 60 * 24}, config.JWTkey);
+      res.status(200).json({user, token});
+    })
+    .catch(err => {
+      res.status(404).json({message: 'Could not find user'})
+    })
+
   });
 }
