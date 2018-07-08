@@ -1,6 +1,15 @@
+import axios from 'axios';
+import config from '../../config';
+
 export const fetchUser = (token) => {
   return dispatch => {
-    //get token
-    dispatch({type: 'SET_USER', payload: {username: 'John', }})
+
+    axios.get(config.apiURL + '/api/auth?token=' + token)
+    .then(res => {
+      dispatch({type: 'SET_USER', payload: res.data})
+    })
+    .catch(err => {
+      console.log(err)
+    })
   }
 }

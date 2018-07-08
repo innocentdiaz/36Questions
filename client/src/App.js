@@ -11,7 +11,12 @@ const store = createStore(reducers, applyMiddleware(thunk))
 
 class App extends Component {
   componentWillMount() {
-    // Fetch user using token here if it is present
+    let jwt = localStorage.getItem('36QUESTIONS_TOKEN') || false;
+
+    if (jwt) {
+      console.log('dispatching fetch')
+      store.dispatch(fetchUser(jwt));
+    }
   }
   render() {
     return (
