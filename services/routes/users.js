@@ -24,6 +24,8 @@ module.exports = (app) => {
     const password = req.body.password ? req.body.password : false;
     const firstName = req.body.firstName ? req.body.firstName : false;
     const lastName = req.body.lastName ? req.body.lastName : '';
+    const interests = typeof (req.body.interests == Array) ? req.body.interests : false;
+    const gender = req.body.gender ? req.body.gender : false; 
 
     if (!email || !password || ! firstName) return res.status(405).json({message: 'Missing field(s)'});
     if (email.length <= 5 || password.length <= 6) return res.status(405).json({message: 'Email or password is too short'});
@@ -36,7 +38,9 @@ module.exports = (app) => {
       email,
       password: hashed,
       firstName,
-      lastName
+      lastName,
+      interests,
+      gender
     };
 
     User.create(userData)
