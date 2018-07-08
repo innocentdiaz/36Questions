@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import './App.css';
 import openSocket from 'socket.io-client';
-
+import Router from './components/Router';
 
 class App extends Component {
   handleChange(event) {
@@ -32,24 +31,8 @@ class App extends Component {
   };
   render() {
     return (
-      <div className="App">
-        <label>Name</label>
-        <input value={this.state.name} onChange={(event) => this.setState({name: event.target.value})} />
-        <br />
-        <label>Interests</label>
-        <hr/>
-        <label>Female</label>
-        <input type="radio" value={this.state.interestedInFemale} onChange={(interestedInFemale) => this.setState({interestedInFemale})} />
-        <label>Male</label>
-        <input type="radio" value={this.state.interestedInMale} onChange={(interestedInMale) => this.setState({interestedInMale})} />
-        <br/>
-        <label>Gender</label>
-        <hr />
-        <select value={this.state.gender} onChange={this.handleChange}>
-          <option vale="male">Male</option>
-          <option vale="female">Female</option>
-        </select>
-        <button onClick={this.handleSubmit}>Join search</button>
+      <div className="main">
+        <Router />
       </div>
     );
   }
