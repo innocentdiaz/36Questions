@@ -3,9 +3,11 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const config = require('./config');
+const cors = require('cors');
 
 mongoose.connect(config.DBurl, { useNewUrlParser: true });
 
+app.use(cors())
 app.use(express.json());
 
 var server = http.createServer(app);
