@@ -1,4 +1,9 @@
-const io = require('socket.io')();
+const http = require('http');
+const express = require('express');
+const app = express();
+
+var server = http.createServer(app);
+const io = require('socket.io')(server);
 
 var pendingMatchQue = [];
 var loopIsRunning = false;
@@ -102,5 +107,8 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
+app.get('/ping', (req, res) => res.send('PONG'));
+
 const PORT = process.env.PORT || 5000;
-io.listen(PORT)
+
+server.listen(PORT, () => console.log('Listening at port ', PORT))
