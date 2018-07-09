@@ -14,9 +14,11 @@ module.exports = (io) => {
 
     matchIndividual(U1)
     .then((U2) => {
-      pendingMatchQue = pendingMatchQue.filter(USER => USER != U1 && USER != U2);
+      removeFromMatchQue(U1);
+      removeFromMatchQue(U2);
 
       initRoom(U1, U2);
+
       loopIsRunning = false;
       if (pendingMatchQue.length >= 2 && originalMatchingQue != pendingMatchQue) { // We still have users to try to match that are not the same as the past users
         matchingLoop(i + 1);
@@ -75,6 +77,7 @@ module.exports = (io) => {
 
   const removeFromMatchQue = (socket) => {
     pendingMatchQue = pendingMatchQue.filter(u => u != socket);
+
     socket.emit('subscribe disconnect');
   };
 
@@ -86,7 +89,9 @@ module.exports = (io) => {
     // both will now join a room
   }
 
-  io.sockets.on('connection', function(socket) {
+  var nsp = io.of('/matching');
+
+  nsp.on('connection', function(socket) {
     socket.on('subscribeToQue', (data) => {
       let {_id, firstName, interests, gender} = data;
       
@@ -100,11 +105,11 @@ module.exports = (io) => {
       };
 
       addToMatchQue(socket);
-      io.sockets.emit('que length', String(pendingMatchQue.length));
+      nsp.emit('que length', String(pendingMatchQue.length));
     });
     socket.on('disconnect', function() {
       removeFromMatchQue(socket);
-      io.sockets.emit('que length', String(pendingMatchQue.length));
+      nsp.emit('que length', String(pendingMatchQue.length));
     });
   });
 }

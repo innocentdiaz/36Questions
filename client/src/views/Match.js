@@ -9,7 +9,7 @@ class Match extends Component {
     if (nextProps.user === false) window.location = '/login';
   }
   subscribeToSearch() {
-    let socket = io(config.apiURL);
+    let socket = io(config.apiURL + '/matching');
     socket.emit('subscribeToQue', this.props.user);
     socket.on('subscribe success', (que_length) => {
       this.setState({display: 'Joined matching. There are ' + que_length + ' users matching.'})
