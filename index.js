@@ -17,6 +17,7 @@ const io = require('socket.io')(server);
 require('./services/routes/auth')(app);
 require('./services/routes/users')(app);
 require('./services/matching')(io);
+require('./services/activeRoom')(io);
 
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {

@@ -6,6 +6,7 @@ import About from '../views/About';
 import Match from '../views/Match';
 import SignUp from '../views/SignUp';
 import LogIn from '../views/LogIn';
+import Room from '../views/Room';
 
 class Router extends Component {
   render(){
@@ -17,6 +18,7 @@ class Router extends Component {
           <Route path="/match" component={Match} />
           <Route path="/signup" component={SignUp} />
           <Route path="/login" component={LogIn} />
+          <Route path="/room" component={Room} />
         </div>
       </BrowserRouter>
     );

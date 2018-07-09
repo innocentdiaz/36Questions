@@ -14,7 +14,6 @@ module.exports = (app) => {
 
     jwt.verify(token, config.JWTkey, (err, decoded) => {
       if (!decoded || err) return res.status(406).json({message: 'Failed auth'});
-      console.log(decoded.user)
       res.status(200).json(decoded.user)
     });
     

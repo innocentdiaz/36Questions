@@ -82,7 +82,7 @@ module.exports = (io) => {
   };
 
   const initRoom = (U1, U2) => {
-    roomName = null;
+    roomName = U1.data._id;
     U1.emit('match success', {name: U2.data.firstName, roomName});
     U2.emit('match success', {name: U1.data.firstName, roomName});
 

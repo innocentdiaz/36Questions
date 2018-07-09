@@ -21,7 +21,8 @@ class Match extends Component {
       this.setState({display: 'Failed matching'})
     });
     socket.on('match success', ({name, roomName}) => {
-      this.setState({display: 'You have been matched with ' + name + '. Going to room ' + roomName})
+      alert('You have been matched with ' + name + '. Joining room.');
+      window.location = '/room?id=' + roomName;
     });
     socket.on('disconnect', () => {
       this.setState({display: 'Disconnected from the matching'})
