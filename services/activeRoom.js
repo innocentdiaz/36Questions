@@ -1,8 +1,11 @@
+const roomController = require('./controllers/roomController');
+
 module.exports = (io) => {
   let rooms = [];
 
   const initRoom = (roomID) => {
     let roomData = {
+      nsp,
       roomID,
       users: [],
       join: function (user) {
@@ -18,7 +21,7 @@ module.exports = (io) => {
         user.emit('join success');
         if (this.users.length == 2) {
           nsp.in(roomData.roomID).emit('begin');
-          // roomController(roomData);
+          roomController(roomData);
         }
       },
       handleDisconnect: function (firstName) {
