@@ -12,8 +12,11 @@ module.exports = (app) => {
 
     if (!token) return res.status(405).json({message: 'Missing token'})
     try {
-      const decoded = jwt.verify(token, config.JWTkey);
-      res.status(decoded ? 200 : 406).json(decoded ? decoded : {message: 'Failed auth'})
+      jwt.verify(token, config.JWTkey, (err, decoded) => {
+        if (!decoded || err) return res.status(406).json({message: 'Failed auth'});
+        res.status(200).json(decoded.user)
+      });
+      
     } catch (error) {
       res.status(400).json({message: 'Failed decode'})
     }

@@ -3,14 +3,12 @@ import config from '../../config';
 
 export const fetchUser = (token) => {
   return dispatch => {
-    console.log(token)
     axios.get(config.apiURL + '/api/auth?token=' + token)
     .then(res => {
-      console.log(res.data)
-      dispatch({type: 'SET_USER', payload: res.data.user})
+      dispatch({type: 'SET_USER', payload: res.data})
     })
     .catch(err => {
-      console.log(err)
+      console.log(err.data.response)
     })
   }
 };
