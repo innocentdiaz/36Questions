@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import Header from '../components/Header';
-import AnimatedWrapper from '../components/AnimatedWrapper';
 
 class About extends Component {
   render(){
@@ -13,4 +12,4 @@ class About extends Component {
   }
 };
 
-export default AnimatedWrapper(About);
+export default About;
