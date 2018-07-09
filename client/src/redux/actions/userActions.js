@@ -6,7 +6,8 @@ export const fetchUser = (token) => {
 
     axios.get(config.apiURL + '/api/auth?token=' + token)
     .then(res => {
-      dispatch({type: 'SET_USER', payload: res.data})
+      console.log(res.data)
+      dispatch({type: 'SET_USER', payload: res.data.user})
     })
     .catch(err => {
       console.log(err)

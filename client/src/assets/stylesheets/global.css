@@ -17,6 +17,7 @@
   color: white;
   text-decoration: none;
 }
+
 .header-main .title {
   margin-right: auto;
   justify-content: center;
@@ -33,4 +34,42 @@
 .main {
   background-color: #f9c296;
   min-height: 100vh;
+  padding-top: 4em;
+}
+
+.home-screen {
+  padding: 1em;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 50vh;
+}
+.home-screen h1 {
+  font-size: xx-large;
+  margin: auto auto;
+}
+.home-screen p {
+  margin: auto auto;
+}
+.home-screen hr {
+  max-width: 400px;
+  border-color: #865a56bf;
+  border-width: .5px;
+}
+.btn-main {
+  font-family: 'Playfair Display', serif;
+  align-self: stretch;
+  margin: auto 20px;
+  padding: 20px;
+  background: #f9c296;
+  border: 1px solid white;
+  color: white;
+  font-size: x-large;
+  transition: .3s all ease-in-out;
+}
+.btn-main:hover {
+  color: #f9c296;
+  background: white;
 }
