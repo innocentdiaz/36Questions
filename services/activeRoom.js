@@ -5,7 +5,6 @@ module.exports = (io) => {
     let roomData = {
       roomID,
       users: [],
-      private: false,
       join: function (user) {
         if (this.users.length >= 2) return user.emit('join fail', 'This room is full');
 
@@ -47,11 +46,8 @@ module.exports = (io) => {
       
       let roomAlreadyExists = rooms.find(room => room.roomID === roomID);
 
-      if (!roomAlreadyExists) {
-        return initRoom(roomID).join(socket)
-      };
-      if (!roomAlreadyExists.private) return roomAlreadyExists.join(socket);
-      if (roomAlreadyExists.private === true) return // Make request asking to join if room is private
+      if (!roomAlreadyExists) return initRoom(roomID).join(socket);
+      roomAlreadyExists.join(socket);
     });
     socket.on('disconnect', function() {
       console.log('User disconnected from rooms');
