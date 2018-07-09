@@ -3,7 +3,7 @@ import config from '../../config';
 
 export const fetchUser = (token) => {
   return dispatch => {
-
+    console.log(token)
     axios.get(config.apiURL + '/api/auth?token=' + token)
     .then(res => {
       console.log(res.data)
@@ -13,4 +13,9 @@ export const fetchUser = (token) => {
       console.log(err)
     })
   }
-}
+};
+
+export const setUser = user => ({
+  type: 'SET_USER',
+  payload: user
+})

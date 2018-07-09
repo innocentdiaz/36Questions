@@ -20,10 +20,11 @@ module.exports = (app) => {
     
   });
   app.post('/api/auth', (req, res) => {
+    if (!req.body) return res.status(405).json({message: 'No fields provided'});
     let email = req.body.email ? req.body.email : false;
     let password = req.body.password ? req.body.password: false;
 
-    if (!email || !password) res.status(405).json({message: 'Missing field(s)'});
+    if (!email || !password) return res.status(405).json({message: 'Missing field(s)'});
 
     User.findOne({email: {"$regex": email, "$options": "i"}})
     .then(user => {

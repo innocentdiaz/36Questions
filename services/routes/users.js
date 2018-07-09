@@ -2,6 +2,7 @@ const User = require('../../lib/schemas/User');
 const bcrypt = require('bcrypt');
 const config = require('../../config');
 const url = require('url');
+const jwt = require('jsonwebtoken');
 
 module.exports = (app) => {
   app.get('/api/users', function(req, res) {
@@ -43,13 +44,11 @@ module.exports = (app) => {
       gender
     };
 
-    User.create(userData)
-    .then(user => {
-      delete user.password
-      res.status(200).json({message: 'Created user successfully', user})
-    })
-    .catch(err => {
-      res.status(400).json({message: 'Could not save user'})
-    })
+    User.create(userData, function(err, user) {
+      if (err) return res.status(400).json({message: 'Could not save user'});
+      let token = jwt.sign({user}, config.JWTkey, {expiresIn: 86400 /* expires in 24 hours*/});
+
+      res.status(200).json({message: 'Created user successfully', user, token})
+    });
   })
 };
