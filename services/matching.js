@@ -37,7 +37,8 @@ module.exports = (io) => {
 
   let matchIndividual = (U1) => new Promise(function (resolve, reject) {
     let cleanQue = pendingMatchQue.filter(USER => USER != U1);
-    console.log('Attempting to match U1 ' + U1.data.name + ' with ' + cleanQue.length + ' user(s)');
+    
+    console.log('Attempting to match U1 ' + U1.data.firstName + ' with ' + cleanQue.length + ' user(s)');
 
     for (let i = 0; i < cleanQue.length; i++) {
       let U2 = cleanQue[i];
@@ -47,7 +48,7 @@ module.exports = (io) => {
       let U2interests = U2.data.interests;
 
 
-      console.log('Attempting to match with ' + U2.data.name);
+      console.log('Attempting to match with ' + U2.data.firstName);
       if (U1interests.includes(U2gender) && U2interests.includes(U1gender)) {
         console.log('Match has been made')
         resolve(U2);
@@ -61,10 +62,12 @@ module.exports = (io) => {
 
 
   const addToMatchQue = (socket) => {
-    if (!pendingMatchQue.includes(socket)) { // Need to fix this
-      console.log(socket.data.name + ' is at pos ' + pendingMatchQue.indexOf(socket));
+    let isAlreadyInQue = pendingMatchQue.find(u => u.data._id === socket.data._id);
+    if (!!isAlreadyInQue) return console.log(socket.data._id + ' is already in the que');
+
+    if (!isAlreadyInQue) {
       pendingMatchQue.push(socket);
-      socket.emit('subscribe success');
+      socket.emit('subscribe success', String(pendingMatchQue.length));
 
       if (!loopIsRunning && pendingMatchQue.length >= 2) matchingLoop();
     }
@@ -77,23 +80,31 @@ module.exports = (io) => {
 
   const initRoom = (U1, U2) => {
     roomName = null;
-    U1.emit('match success', {name: U2.data.name, roomName});
-    U2.emit('match success', {name: U1.data.name, roomName});
+    U1.emit('match success', {name: U2.data.firstName, roomName});
+    U2.emit('match success', {name: U1.data.firstName, roomName});
 
     // both will now join a room
   }
 
-  io.on('connection', function(socket) {
+  io.sockets.on('connection', function(socket) {
     socket.on('subscribeToQue', (data) => {
-      socket.data = {
-        name: data.name || 'anon',
-        interests: data.interests.filter(interest=>interest.toLowerCase()),
-        gender: data.gender.toLowerCase()
-      }
+      let {_id, firstName, interests, gender} = data;
       
+      if (!_id || !firstName || !Array.isArray(interests) || !gender) return socket.emit('invalid information')
+
+      socket.data = {
+        _id,
+        firstName,
+        interests: interests.filter(interest=>interest.toLowerCase()),
+        gender: gender.toLowerCase()
+      };
+
       addToMatchQue(socket);
+      io.sockets.emit('que length', String(pendingMatchQue.length));
     });
     socket.on('disconnect', function() {
+      io.sockets.emit('que length', String(pendingMatchQue.length));
+
       removeFromMatchQue(socket);
     });
   });

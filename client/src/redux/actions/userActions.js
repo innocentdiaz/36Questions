@@ -8,7 +8,7 @@ export const fetchUser = (token) => {
       dispatch({type: 'SET_USER', payload: res.data})
     })
     .catch(err => {
-      console.log(err.data.response)
+      console.log(err)
     })
   }
 };

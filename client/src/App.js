@@ -13,7 +13,7 @@ class App extends Component {
   componentWillMount() {
     let jwt = localStorage.getItem('36QUESTIONS_TOKEN') || false;
 
-    if (jwt !== 'undefined') {
+    if (!!jwt) {
       store.dispatch(fetchUser(jwt));
     }
   }
