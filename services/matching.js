@@ -103,9 +103,8 @@ module.exports = (io) => {
       io.sockets.emit('que length', String(pendingMatchQue.length));
     });
     socket.on('disconnect', function() {
-      io.sockets.emit('que length', String(pendingMatchQue.length));
-
       removeFromMatchQue(socket);
+      io.sockets.emit('que length', String(pendingMatchQue.length));
     });
   });
 }
