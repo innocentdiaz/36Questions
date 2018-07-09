@@ -1,10 +1,9 @@
 module.exports = (io) => {
   let rooms = [];
 
-  const initRoom = (socket) => {
-
+  const initRoom = (roomID) => {
     let roomData = {
-      roomID: socket.handshake.query.id,
+      roomID,
       users: [],
       private: false,
       join: function (user) {
@@ -30,8 +29,8 @@ module.exports = (io) => {
       }
     };
 
-    roomData.join(socket);
     rooms.push(roomData);
+    return roomData;
   };
 
   var nsp = io.of('/rooms')
@@ -48,7 +47,9 @@ module.exports = (io) => {
       
       let roomAlreadyExists = rooms.find(room => room.roomID === roomID);
 
-      if (!roomAlreadyExists) return initRoom(socket);
+      if (!roomAlreadyExists) {
+        return initRoom(roomID).join(socket)
+      };
       if (!roomAlreadyExists.private) return roomAlreadyExists.join(socket);
       if (roomAlreadyExists.private === true) return // Make request asking to join if room is private
     });
