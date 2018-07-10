@@ -8,24 +8,28 @@ module.exports = (io) => {
       nsp,
       roomID,
       users: [],
-      join: function (user) {
-        if (this.users.length >= 2) return user.emit('join fail', 'This room is full');
+      join: function (socket) {
+        if (this.users.length >= 2) return socket.emit('display', 'This room is full');
 
-        user.join(this.roomID, () => {
-          user.on('disconnect', () => roomData.handleDisconnect(user.firstName));
-          roomData.users.push(user);
-          roomData.handleConnect(user);
+        if (this.users.find(u => u.data._id === socket.data._id)) return socket.emit('display', 'You are already in this room');
+        
+        socket.join(this.roomID, () => {
+          socket.on('disconnect', () => roomData.handleDisconnect(socket));
+          roomData.users.push(socket);
+          roomData.handleConnect(socket);
         })
       },
-      handleConnect: function (user) {
-        user.emit('join success');
+      handleConnect: function (socket) {
+        socket.emit('display', 'Joined room. Waiting for user..');
         if (this.users.length == 2) {
-          nsp.in(roomData.roomID).emit('begin');
+          nsp.in(roomData.roomID).emit('display', 'User has connected.');
           roomController(roomData);
         }
       },
-      handleDisconnect: function (firstName) {
-        if (roomData.users.length == 1) return roomData.users[0].emit('user disconnected', firstName);
+      handleDisconnect: function (socket) {
+        roomData.users = roomData.users.filter(u => u.data._id !== socket.data._id);
+
+        if (roomData.users.length == 1) return roomData.users[0].emit('user disconnected', socket.data.firstName);
       
         if (roomData.users.length == 0) rooms.filter(r => r._id !== roomID);
       }
@@ -42,18 +46,20 @@ module.exports = (io) => {
 
       let {firstName, _id} = userData;
 
-      if (!firstName || !_id) return socket.emit('invalid information');
-      if (!roomID || !userData) return socket.emit('invalid information');
+      if (!firstName || !_id) return socket.emit('display', 'invalid information');
+      if (!roomID || !userData) return socket.emit('display', 'invalid information');
 
       socket.data = userData;
       
-      let roomAlreadyExists = rooms.find(room => room.roomID === roomID);
+      let existingRoom = rooms.find(room => room.roomID === roomID);
 
-      if (!roomAlreadyExists) return initRoom(roomID).join(socket);
-      roomAlreadyExists.join(socket);
+      if (!existingRoom) return initRoom(roomID).join(socket);
+      
+      existingRoom.join(socket);
     });
     socket.on('disconnect', function() {
-      console.log('User disconnected from rooms');
+      socket.emit('disconnected');
+      console.log('User disconnected from namespace /rooms');
     });
   });
 }
