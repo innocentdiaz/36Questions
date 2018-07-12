@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "concurrently \"nodemon index\" \"cd client && npm start\" ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "JohnCdf",
