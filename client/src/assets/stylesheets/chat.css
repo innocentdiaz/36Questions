@@ -1,0 +1,10 @@
+.chat-container {
+  max-height: 100vh;
+}
+.chat {
+  width: 100%;
+  overflow-y: scroll;
+}
+.chat li {
+  color: #866a7e;
+}

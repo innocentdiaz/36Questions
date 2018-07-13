@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Header from '../components/Header';
 import {connect} from 'react-redux'
+import '../assets/stylesheets/home.css';
 
 class Home extends Component {
   componentDidMount() {

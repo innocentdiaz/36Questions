@@ -1,62 +1,8 @@
-.header-main {
-  display: inline-flex;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
 
-  background-color: transparent;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  margin: 10px;
-  padding: 10px;
-  border-bottom: 1px solid #865a56bf;
-}
-.header-main a {
-  color: white;
-  text-decoration: none;
-}
-
-.header-main .title {
-  margin-right: auto;
-  justify-content: center;
-  display: flex;
-  align-items: flex-start;
-}
-.header-main .title #number {
-  font-size: 2.7em;
-}
-.header-main .title #text {
-  align-self: center;
-  font-size: 1.9em;
-}
 .main {
   background-color: #f9c296;
   min-height: 100vh;
   padding-top: 4em;
-}
-
-.home-screen {
-  padding: 1em;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  min-height: 50vh;
-}
-.home-screen h1 {
-  font-size: xx-large;
-  margin: auto auto;
-}
-.home-screen p {
-  margin: auto auto;
-}
-.home-screen hr {
-  max-width: 400px;
-  border-color: #865a56bf;
-  border-width: .5px;
 }
 .btn-main {
   font-family: 'Playfair Display', serif;
@@ -73,13 +19,4 @@
   color: #f9c296;
   background: white;
 }
-.chat-container {
-  max-height: 100vh;
-}
-.chat {
-  width: 100%;
-  overflow-y: scroll;
-}
-.chat li {
-  color: #866a7e;
-}
+

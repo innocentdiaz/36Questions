@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import '../assets/stylesheets/header.css';
 
 class Header extends Component {
   render(){

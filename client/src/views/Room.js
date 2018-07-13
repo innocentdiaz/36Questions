@@ -3,6 +3,7 @@ import queryString from 'query-string';
 import io from 'socket.io-client';
 import config from '../config';
 import { connect } from 'react-redux';
+import '../assets/stylesheets/chat.css';
 
 class Room extends Component {
   handleSubmit() {
