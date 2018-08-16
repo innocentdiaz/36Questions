@@ -1,5 +1,5 @@
 const set_speech = (users, condition) => {
-  users.forEach(user => {
+  Object.values(users).forEach(user => {
     user.canTalk = condition;
     user.emit('set speech', condition);
   });
@@ -26,8 +26,8 @@ const displayRules = (emit_to_room, cb) => {
 };
 
 module.exports = (roomData) => {
-  const U1 = roomData.users[0];
-  const U2 = roomData.users[1];
+  const U1 = Object.values(roomData.users)[0];
+  const U2 = Object.values(roomData.users)[1];
   U1.canTalk = false;
   U2.canTalk = false;
 
@@ -37,24 +37,27 @@ module.exports = (roomData) => {
     nsp.in(roomData.roomID).emit(type, payload);
   };
 
-  roomData.users.forEach(Un => {
+  Object.values(roomData.users).forEach(Un => {
     Un.on('message', (content) => { // Handle message event for each user
       if (!Un.canTalk) return Un.emit('display', 'You cannot talk right now');
       
-      emit_to_room('message', {sender: Un.data.firstName, content})
+      emit_to_room('message', {sender: Un._data.firstName, content})
     });
+    Un.on('continue', () => {
+      if (roomData.continue) roomData.continue(Un._data.firstName)
+    })
   });
 
   emit_to_room('display', 'Matching complete. Welcome.');
 
   setTimeout(function(){
     set_speech([U1, U2], false)
-    U1.emit('message', {sender: 'Controller', content: 'You have been matched with ' + U2.data.firstName + '. Say hello!'});
-    U2.emit('message', {sender: 'Controller', content: 'You have been matched with ' + U1.data.firstName + '. Say hello!'});
+    U1.emit('message', {sender: 'Controller', content: 'You have been matched with ' + U2._data.firstName + '. Say hello!'});
+    U2.emit('message', {sender: 'Controller', content: 'You have been matched with ' + U1._data.firstName + '. Say hello!'});
 
     const callback = () => {
       set_speech([U1, U2], true);
-      console.log('Users can now speak to each other. The game will begin once they choose')
+      // This is where we have left off at :)
     }
 
     setTimeout(function(){displayRules(emit_to_room, callback)}, 3000);

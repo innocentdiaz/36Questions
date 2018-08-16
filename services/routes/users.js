@@ -45,7 +45,7 @@ module.exports = (app) => {
     };
 
     User.create(userData, function(err, user) {
-      if (err) return res.status(400).json({message: 'Could not save user'});
+      if (err) return res.status(400).json({message: 'Could not create user.. Probably already exists'});
       let token = jwt.sign({user}, config.JWTkey, {expiresIn: 86400 /* expires in 24 hours*/});
 
       res.status(200).json({message: 'Created user successfully', user, token})

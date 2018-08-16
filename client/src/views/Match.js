@@ -18,7 +18,7 @@ class Match extends Component {
       this.setState({display: 'There are ' + que_length + ' user(s) in the que.'})
     })
     socket.on('subscribe disconnect', () => {
-      this.setState({display: 'Failed matching'})
+      this.setState({display: 'Disconnected from matching'})
     });
     socket.on('match success', ({name, roomName}) => {
       alert('You have been matched with ' + name + '. Joining room.');

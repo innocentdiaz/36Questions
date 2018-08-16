@@ -6,7 +6,9 @@ import { connect } from 'react-redux';
 import '../assets/stylesheets/chat.css';
 
 class Room extends Component {
-  handleSubmit() {
+  handleSubmit(event) {
+    event.preventDefault();
+
     this.state.socket.emit('message', this.state.message);
     this.setState({message: ''});
   }
@@ -31,12 +33,13 @@ class Room extends Component {
     const parsed = queryString.parse(this.props.location.search);
     let roomID = parsed.id ? parsed.id : false;
 
+    if (!roomID) return window.location = '/'
     this.setState({socket: io(config.apiURL + '/rooms?id=' + roomID)});
   }
   componentDidUpdate() {
     if (this.state.bindedSocket) return
     if (!this.props.user || this.props.user === 'pending') return
-    if (!this.state.socket) return 
+    if (!this.state.socket) return
 
     this.bindSocket()
   };
@@ -71,12 +74,14 @@ class Room extends Component {
                 <p className="mb-1">{message.content}</p>
               </li>)
             })}
+
           </ul>
+          <form className="input-group form-group" onSubmit={this.handleSubmit}>
+            <input className="form-control" disabled={!this.state.canTalk} readOnly={!this.state.canTalk} value={this.state.message} onChange={event => this.setState({message: event.target.value})} placeholder="Type a message here" />
+            <button className="btn btn-light">Send</button>
+          </form>
         </div>
-        <div className="input-group form-group">
-          <input className="form-control" disabled={!this.state.canTalk} readOnly={!this.state.canTalk} value={this.state.message} onChange={event => this.setState({message: event.target.value})} placeholder="Type a message here" />
-          <button className="btn btn-light" onClick={this.handleSubmit}>Send</button>
-        </div>
+
       </div>
     );
   }

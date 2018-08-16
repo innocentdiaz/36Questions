@@ -8,7 +8,7 @@ class Header extends Component {
       <div className="header-main">
         <a className="title" href="/"><span id="number">36</span><span id="text">QUESTIONS</span></a>
         {
-          this.props.user !== 'pending' ? this.props.user ? <a href='account'>Account</a> : null : null
+          this.props.user !== 'pending' ? this.props.user ? <a href='account'>Account</a> : <a href='login'>Log in</a> : null
         }
       </div>
     );
