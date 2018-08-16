@@ -8,20 +8,20 @@ const set_speech = (users, condition) => {
 const displayRules = (emit_to_room, cb) => {
   emit_to_room('display', 'Before anything else, lets go over the rules.');
   setTimeout(function(){
-  emit_to_room('display', 'Firstly, your partner will be given a question to ask you - ')
-  setTimeout(function(){
-  emit_to_room('display', 'You will then answer this question. Some questions may be timed, but that is not important.')
-  setTimeout(function(){
-  emit_to_room('display', 'Once you have answered the question, it will be your partners turn to answer the same question.')
-  setTimeout(function(){
-  emit_to_room('display','After they have answered, we will move onto the next question. Simple, no?')
-  setTimeout(function(){
-  emit_to_room('display', 'You may now take this time to get to introduce yourselves, and begin once you are ready');
-  cb()
-  }, 42)
-  }, 42)
-  }, 42)
-  }, 40)
+    emit_to_room('display', 'Firstly, your partner will be given a question to ask you - ')
+    setTimeout(function(){
+      emit_to_room('display', 'You will then answer this question. Some questions may be timed, but that is not important.')
+      setTimeout(function(){
+        emit_to_room('display', 'Once you have answered the question, it will be your partners turn to answer the same question.')
+        setTimeout(function(){
+          emit_to_room('display','After they have answered, we will move onto the next question. Simple, no?')
+          setTimeout(function(){
+            emit_to_room('display', 'You may now take this time to get to introduce yourselves, and begin once you are ready');
+            cb()
+          }, 42)
+        }, 42)
+      }, 42)
+    }, 40)
   }, 40)
 };
 
