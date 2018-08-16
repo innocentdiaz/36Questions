@@ -20,7 +20,7 @@ module.exports = (io) => {
       },
       handleConnect: function (socket) {
         socket.emit('display', 'Joined room. Waiting for user..');
-        if (Object.keys(this.users).length == 2) {
+        if (Object.keys(roomData.users).length == 2) {
           nsp.in(roomData.roomID).emit('display', 'User has connected.');
           roomController(roomData);
         }
