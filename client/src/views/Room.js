@@ -14,10 +14,12 @@ class Room extends Component {
   }
   bindSocket() {
     this.setState({bindedSocket: true})
-    let {socket} = this.state;
+    let { socket } = this.state;
     socket.emit('join room', this.props.user);
 
-    socket.on('user disconnect', (name) => this.setState({display: name + ' has disconnected'}));
+    socket.on('user disconnected', name => {
+      alert(name + ' has disconnected')
+    });
     socket.on('display', (message) => {
       this.setState({display: message})
     });

@@ -12,8 +12,6 @@ module.exports = (io) => {
 
   const matchingLoop = () => { // This is the main loop
     for (let id in pendingMatchQue) {
-      loopIsRunning = true;
-
       let originalMatchingQue = {...pendingMatchQue};
       let U1 = originalMatchingQue[id];
 
@@ -23,23 +21,16 @@ module.exports = (io) => {
         delete pendingMatchQue[U2.id];
 
         initRoom(U1, U2);
-
-        loopIsRunning = false;
-        if (pendingMatchQue.length >= 2 && originalMatchingQue != pendingMatchQue) { // We still have users to try to match that are not the same as the past users
-          matchingLoop(i + 1);
-        }
       })
       .catch(err => {
         console.log('CATCHED : ' + err);
-        loopIsRunning = false;
+      });
 
-        if (originalMatchingQue === pendingMatchQue || !(pendingMatchQue.length - 2)) { // We have the same users that we failed to match, OR there arent any more users to try to match
-          console.log('No more users to match')
-        } else {
-          console.log('We have more users to match')
-          matchingLoop(i+1);
-        }
-      })
+      if (pendingMatchQue.length >= 2) { // We still have users to try to match that are not the same as the past users
+        continue
+      } else {
+        break
+      }
     }
   };
 
@@ -56,7 +47,6 @@ module.exports = (io) => {
       let U2interests = U2._data.interests;
 
       if (U1interests.includes(U2gender) && U2interests.includes(U1gender)) {
-        console.log('Match has been made')
         resolve(U2);
         break
       } else if (i >= cleanQue.length - 1) {
@@ -90,11 +80,16 @@ module.exports = (io) => {
         interests: interests.filter(interest=>interest.toLowerCase()),
         gender: gender.toLowerCase()
       };
+
       socket.emit('subscribe success', String(Object.keys(pendingMatchQue).length));
-      if (!loopIsRunning && Object.keys(pendingMatchQue).length >= 2) matchingLoop();
+
+      if (Object.keys(pendingMatchQue).length == 2) {
+        matchingLoop()
+      };
     });
     socket.on('disconnect', function() {
-      removeFromMatchQue(socket.id)
+      removeFromMatchQue(socket.id);
+      io.emit('que length', Object.keys(pendingMatchQue).length);
     });
   });
 }

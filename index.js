@@ -20,7 +20,7 @@ require('./services/matching')(io);
 require('./services/activeRoom')(io);
 
 if (process.env.NODE_ENV === 'production') {
-  app.get('*', (req, res) => {
+  app.get('/', (req, res) => {
     res.sendFile(__dirname + '/build/index.html');
   })
 };

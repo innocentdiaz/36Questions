@@ -1,39 +1,43 @@
 const roomController = require('./controllers/roomController');
 
 module.exports = (io) => {
-  let rooms = [];
+  let ACTIVE_ROOMS = [];
 
   const initRoom = (roomID) => {
     let roomData = {
       nsp,
-      roomID,
+      id: roomID,
       users: {},
       join: function (socket) {
         if (Object.keys(this.users).length >= 2) return socket.emit('display', 'This room is full');
         if (this.users[socket.id]) return socket.emit('display', 'You are already in this room');
         
-        socket.join(this.roomID, () => {
-          socket.on('disconnect', () => roomData.handleDisconnect(socket));
+        socket.join(roomData.id, () => {
           roomData.users[socket.id] = socket;
           roomData.handleConnect(socket);
+          socket.on('disconnect', () => roomData.handleDisconnect(socket));
         })
       },
       handleConnect: function (socket) {
         socket.emit('display', 'Joined room. Waiting for user..');
         if (Object.keys(roomData.users).length == 2) {
-          nsp.in(roomData.roomID).emit('display', 'User has connected.');
+          nsp.in(roomData.id).emit('display', 'User has connected.');
           roomController(roomData);
         }
       },
       handleDisconnect: function (socket) {
         delete roomData.users[socket.id];
 
-        if (roomData.users.length == 1) return roomData.users[0].emit('user disconnected', socket._data.firstName);
-        if (roomData.users.length == 0) rooms.filter(r => r._id !== roomID);
+        if (Object.keys(roomData.users).length == 1) {
+          nsp.in(roomData.id).emit('user disconnected', socket._data.firstName)
+        } else if (Object.keys(roomData.users).length == 0) {
+          console.log("FILTERING ROOM " + roomID)
+          ACTIVE_ROOMS = ACTIVE_ROOMS.filter(r => r.id !== roomID)
+        }
       }
     };
 
-    rooms.push(roomData);
+    ACTIVE_ROOMS.push(roomData);
     return roomData;
   };
 
@@ -49,11 +53,13 @@ module.exports = (io) => {
 
       socket._data = userData;
       
-      let existingRoom = rooms.find(room => room.roomID === roomID);
+      let existingRoom = ACTIVE_ROOMS.find(room => room.id === roomID);
 
-      if (!existingRoom) return initRoom(roomID).join(socket);
-      
-      existingRoom.join(socket);
+      if (!existingRoom){
+        initRoom(roomID).join(socket)
+      } else {
+        existingRoom.join(socket);
+      }
     });
     socket.on('disconnect', function() {
       // socket.emit('disconnected');

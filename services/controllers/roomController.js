@@ -31,10 +31,10 @@ module.exports = (roomData) => {
   U1.canTalk = false;
   U2.canTalk = false;
 
-  const nsp = roomData.nsp;
+  const { nsp } = roomData;
 
   const emit_to_room = (type, payload) => {
-    nsp.in(roomData.roomID).emit(type, payload);
+    nsp.in(roomData.id).emit(type, payload);
   };
 
   Object.values(roomData.users).forEach(Un => {
@@ -60,6 +60,8 @@ module.exports = (roomData) => {
       // This is where we have left off at :)
     }
 
-    setTimeout(function(){displayRules(emit_to_room, callback)}, 3000);
+    setTimeout(function(){
+      displayRules(emit_to_room, callback)
+    }, 3000);
   }, 1500);
 };
