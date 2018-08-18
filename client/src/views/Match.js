@@ -12,39 +12,51 @@ class Match extends Component {
     let socket = io(config.apiURL + '/matching');
     socket.emit('subscribeToQue', this.props.user);
     socket.on('subscribe success', (que_length) => {
-      this.setState({display: 'Joined matching. There are ' + que_length + ' users matching.'})
+      this.setState({
+        display: 'Joined matching. There are ' + que_length + ' users matching.',
+        matching: true
+      })
     });
     socket.on('que length', (que_length) => {
       this.setState({display: 'There are ' + que_length + ' user(s) in the que.'})
     })
     socket.on('subscribe disconnect', () => {
-      this.setState({display: 'Disconnected from matching'})
+      this.setState({display: 'Disconnected from matching', matching: false})
     });
     socket.on('match success', ({name, roomName}) => {
       alert('You have been matched with ' + name + '. Joining room.');
       window.location = '/room?id=' + roomName;
     });
     socket.on('disconnect', () => {
-      this.setState({display: 'Disconnected from the matching'})
+      this.setState({
+        display: 'Disconnected from the matching',
+        matching: false
+      })
     });
     socket.on('invalid information', () => {
-      this.setState({display: 'You have provided invalid information to the server'})
-    })
+      this.setState({
+        display: 'You have provided invalid information to the server',
+        matching: false
+      });
+    });
   }
   constructor(props){
     super(props);
 
-    this.state = {display: ''};
+    this.state = {
+      display: '',
+      matching: false
+    };
     this.subscribeToSearch = this.subscribeToSearch.bind(this);
   };
   render(){
-    return !this.props.user || this.props.user === 'pending' ? <h1>You are not logged in</h1> : (
+    return !this.props.user ? <h1>You are not logged in</h1> : (
       <div className="main">
         <Header />
         <div className="container-fluid flex align-items-center">
           <h1>Ready to match</h1>
           <p>{this.state.display}</p>
-          <button className="btn-main" onClick={this.subscribeToSearch}>Search for a match</button>
+          {this.state.matching ? null : <button className="btn-main" onClick={this.subscribeToSearch}>Search for a match</button>}
         </div>
       </div>
     )

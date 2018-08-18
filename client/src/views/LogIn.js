@@ -7,7 +7,7 @@ import {setUser} from '../redux/actions/userActions';
 
 class LogIn extends Component {
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user && nextProps.user !== 'pending') window.location = '/';
+    if (nextProps.user) window.location = '/';
   }
   handleSubmit(event) {
     this.setState({display: 'Logging in'});

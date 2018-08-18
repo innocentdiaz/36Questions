@@ -11,7 +11,7 @@ class Home extends Component {
     return(
       <div className="main">
         <Header />
-        {this.props.user && this.props.user !== 'pending' ? <div className="home-screen">
+        {this.props.user ? <div className="home-screen">
           <h1>Welcome, {this.props.user.firstName}.</h1>
           <hr/>
           <button className="btn-main" onClick={() => window.location='/match'}>GET MATCHED</button>

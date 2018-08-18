@@ -38,7 +38,7 @@ class Room extends Component {
   }
   componentDidUpdate() {
     if (this.state.bindedSocket) return
-    if (!this.props.user || this.props.user === 'pending') return
+    if (!this.props.user) return
     if (!this.state.socket) return
 
     this.bindSocket()

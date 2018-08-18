@@ -7,7 +7,7 @@ import {setUser} from '../redux/actions/userActions';
 
 class SignUp extends Component {
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user && nextProps.user !== 'pending') window.location = '/';
+    if (nextProps.user) window.location = '/';
   }
   handleSelect(key, event) {
     if (key === 'gender') {
