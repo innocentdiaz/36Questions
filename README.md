@@ -11,3 +11,7 @@ The technologies used are:
 * Socket.io
 * Axios
 * MongoDB / Mongoose
+
+Todo:
+* Integrate actual game after matching
+* Refactor
