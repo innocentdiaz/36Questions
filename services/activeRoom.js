@@ -61,8 +61,5 @@ module.exports = (io) => {
         existingRoom.join(socket);
       }
     });
-    socket.on('disconnect', function() {
-      // socket.emit('disconnected');
-    });
   });
 }
