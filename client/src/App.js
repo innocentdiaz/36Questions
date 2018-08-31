@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import store from 'store';
 import Router from './components/Router';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
@@ -7,20 +8,20 @@ import reducers from './redux/reducers';
 
 import { fetchUser } from './redux/actions/userActions';
 
-const store = createStore(reducers, applyMiddleware(thunk))
+const redux_store = createStore(reducers, applyMiddleware(thunk))
 
 class App extends Component {
   componentWillMount() {
-    let jwt = localStorage.getItem('36QUESTIONS_TOKEN') || false;
+    let jwt = store.get('TSQ_TOKEN');
 
     if (!!jwt) {
-      store.dispatch(fetchUser(jwt));
+      redux_store.dispatch(fetchUser(jwt));
     }
   }
   render() {
     return (
       <div className="main">
-        <Provider store={store}>
+        <Provider store={redux_store}>
           <Router />
         </Provider>
       </div>

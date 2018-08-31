@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Header from '../components/Header';
-import Axios from '../../node_modules/axios';
-import config from '../config';
+import store from 'store';
+import api from '../api';
 import {setUser} from '../redux/actions/userActions';
 
 class SignUp extends Component {
@@ -31,17 +31,25 @@ class SignUp extends Component {
 
     let {firstName, lastName, interests, gender, email, password} = this.state;
 
-    Axios.post(config.apiURL + '/api/users', {email, password, firstName, lastName, interests, gender})
+    api.post('/users', {
+      email,
+      password,
+      firstName,
+      lastName,
+      interests,
+      gender
+    })
     .then(res => {
-      this.setState({display: 'Signed in!'})
-      let { user, token } = res.data;
+      if (res.ok) {
+        this.setState({display: 'Signed in!'})
+        let { token } = res.data;
 
-      localStorage.setItem('36QUESTIONS_TOKEN', token);
-      this.props.setUser(user);
-    })
-    .catch(err => {
-      this.setState({display: err.response.data.message || 'Failed to sign up'})
-    })
+        store.set('TSQ_TOKEN', token);
+        window.location = '/'
+      } else {
+        this.setState({display: res.data.message || 'Failed to sign up'})
+      }
+    });
   }
   constructor(props){
     super(props);

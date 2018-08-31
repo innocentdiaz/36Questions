@@ -1,15 +1,17 @@
-import axios from 'axios';
-import config from '../../config';
+import api from '../../api';
+import store from 'store';
 
 export const fetchUser = (token) => {
   return dispatch => {
-    axios.get(config.apiURL + '/api/auth?token=' + token)
+    api.get('/auth?token=' + token)
     .then(res => {
-      dispatch({type: 'SET_USER', payload: res.data})
-    })
-    .catch(err => {
-      console.log(err)
-    })
+      if (res.ok) {
+        dispatch({type: 'SET_USER', payload: res.data})
+      } else {
+        dispatch({type: 'SET_USER', payload: false})
+        store.remove('TSQ_TOKEN')
+      }
+    });
   }
 };
 

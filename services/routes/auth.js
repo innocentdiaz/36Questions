@@ -10,11 +10,17 @@ module.exports = (app) => {
     var query = url_parts.query;
     let token = query.token;
 
-    if (!token) return res.status(405).json({message: 'Missing token'})
+    if (!token) return res.status(422).json({message: 'Missing token'})
 
     jwt.verify(token, config.JWTkey, (err, decoded) => {
-      if (!decoded || err) return res.status(406).json({message: 'Failed auth'});
-      res.status(200).json(decoded.user)
+      if (!decoded || !decoded.id || err) return res.status(401).json({message: 'Failed auth'});
+      User.findById(decoded.id)
+      .then(user => {
+        res.status(200).json(user)
+      })
+      .catch(err => {
+        res.status(404).json({ message: 'Could not find user' })
+      })
     });
     
   });
@@ -31,8 +37,8 @@ module.exports = (app) => {
 
       if (!comparison) return res.status(406).json({message: 'Failed authentication'});
       
-      var token = jwt.sign({user, expiresIn: 1000 * 60 * 60 * 24}, config.JWTkey);
-      res.status(200).json({user, token});
+      var token = jwt.sign({id: user._id}, config.JWTkey, {expiresIn: 1000 * 60 * 60 * 24});
+      res.status(200).json({token});
     })
     .catch(err => {
       console.log(err)
