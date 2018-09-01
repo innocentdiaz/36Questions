@@ -1,6 +1,5 @@
 const User = require('../../lib/schemas/User');
 const bcrypt = require('bcrypt');
-const config = require('../../config');
 const url = require('url');
 const jwt = require('jsonwebtoken');
 
@@ -31,7 +30,7 @@ module.exports = (app) => {
     if (!email || !password || ! firstName) return res.status(405).json({message: 'Missing field(s)'});
     if (email.length <= 5 || password.length <= 6) return res.status(405).json({message: 'Email or password is too short'});
 
-    let hashed = bcrypt.hashSync(password, config.saltRounds);
+    let hashed = bcrypt.hashSync(password, process.env.saltRounds);
     
     if (!hashed) return res.status(400).json({message: 'Could not hash password'})
 
@@ -46,7 +45,7 @@ module.exports = (app) => {
 
     User.create(userData, function(err, user) {
       if (err) return res.status(400).json({message: 'Could not create user.. Probably already exists'});
-      let token = jwt.sign({user}, config.JWTkey, {expiresIn: 86400 /* expires in 24 hours*/});
+      let token = jwt.sign({user}, process.env.JWTkey, {expiresIn: 86400 /* expires in 24 hours*/});
 
       res.status(200).json({message: 'Created user successfully', user, token})
     });

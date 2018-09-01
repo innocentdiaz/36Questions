@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const config = require('../../config');
 const url = require('url');
 const User = require('../../lib/schemas/User');
 const bcrypt = require('bcrypt');
@@ -12,7 +11,7 @@ module.exports = (app) => {
 
     if (!token) return res.status(422).json({message: 'Missing token'})
 
-    jwt.verify(token, config.JWTkey, (err, decoded) => {
+    jwt.verify(token, process.env.JWTkey, (err, decoded) => {
       if (!decoded || !decoded.id || err) return res.status(401).json({message: 'Failed auth'});
       User.findById(decoded.id)
       .then(user => {
@@ -37,7 +36,7 @@ module.exports = (app) => {
 
       if (!comparison) return res.status(406).json({message: 'Failed authentication'});
       
-      var token = jwt.sign({id: user._id}, config.JWTkey, {expiresIn: 1000 * 60 * 60 * 24});
+      var token = jwt.sign({id: user._id}, process.env.JWTkey, {expiresIn: 1000 * 60 * 60 * 24});
       res.status(200).json({token});
     })
     .catch(err => {
