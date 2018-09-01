@@ -72,12 +72,13 @@ module.exports = (roomData) => { // users have been paired and can interact by n
       U1.emit('isActive', U1.id == roomData.activeUser.id) // Are you active?
       U2.emit('isActive', U2.id == roomData.activeUser.id) // or are you active?
       if (roomData.currentTurn == 1) {
-        emit_to_room('display', `${roomData.activeUser._data.firstName}'s turn to answer. "${question.body}"`)
+        roomData.activeUser.emit('display', 'Your turn to answer. ' + question.body)
+        roomData.inactiveUser.emit('display', `${roomData.activeUser._data.firstName}'s turn to answer. "${question.body}"`)
       } else {
-        emit_to_room('display', `Question for ${roomData.activeUser._data.firstName}. "${question.body}"`)
+        roomData.activeUser.emit('display', 'Question: ' + question.body)
+        roomData.inactiveUser.emit('display', `Question for ${roomData.activeUser._data.firstName}. "${question.body}"`)
       }
     } else {
-      console.log('Game is over!')
       emit_to_room('end');
     }
   }
