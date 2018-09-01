@@ -4,6 +4,10 @@ import io from 'socket.io-client';
 import config from '../config';
 import { connect } from 'react-redux';
 import '../assets/stylesheets/chat.css';
+import messageAudio from '../assets/audio/message.mp3';
+import turnAudio from '../assets/audio/turn.mp3';
+let messageSound = new Audio(messageAudio);
+let turnSound = new Audio(turnAudio);
 
 class Room extends Component {
   handleSubmit(event) {
@@ -26,8 +30,8 @@ class Room extends Component {
     socket.emit('join room', this.props.user);
 
     socket.on('isActive', isActive => {
+      turnSound.play()
       this.setState({ isActive })
-      console.log('isActive = ' + isActive)
     });
     socket.on('user disconnected', name => {
       alert(name + ' has disconnected')
@@ -36,6 +40,7 @@ class Room extends Component {
       this.setState({display: message})
     });
     this.state.socket.on('message', (message) => {
+      messageSound.play()
       this.setState({messages: [...this.state.messages, message]});
     });
     socket.on('set speech', condition => {
