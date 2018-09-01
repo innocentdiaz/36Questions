@@ -35,6 +35,7 @@ module.exports = (roomData) => { // users have been paired and can interact by n
       }
       
       if (U1.isReadyToPlay && U2.isReadyToPlay) { // START GAME!
+        Un.emit('start')
         nextQuestion() // here is the first question!
       } else {
         emit_to_room('display', Un._data.firstName + ' is ready to play!')
