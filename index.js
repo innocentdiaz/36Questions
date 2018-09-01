@@ -20,6 +20,8 @@ require('./services/matching')(io);
 require('./services/activeRoom')(io);
 
 if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.resolve(__dirname, 'client', 'build')))
+
   app.get('/', (req, res) => {
     res.sendFile(__dirname + '/build/index.html');
   })
