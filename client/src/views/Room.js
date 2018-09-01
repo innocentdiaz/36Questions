@@ -85,16 +85,15 @@ class Room extends Component {
             <h1>36 Questions</h1>
             <p>{this.state.display}</p>
           </div>
-          <button className="btn btn-light" id="on-ready" onClick={this.onReady}>
-            Ready to play
-          </button>
           { this.state.isActive ? 
             <button className="btn btn-light on-done" disabled={!this.state.isActive} onClick={() => this.state.socket.emit('done')}>
               Done answering!
             </button>
             : null
           } 
-          
+          <button className="btn btn-light" id="on-ready" onClick={this.onReady}>
+            Ready to play
+          </button>
 
           <ul className="chat list-group">
             {this.state.messages.map((message, i) => {
