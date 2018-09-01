@@ -12,11 +12,23 @@ class Room extends Component {
     this.state.socket.emit('message', this.state.message);
     this.setState({message: ''});
   }
+  onReady() {
+    // We are ready to start the game
+    let btn = document.getElementById('on-ready');
+    btn.className += ' fade-out';
+
+    // Let the socket know this user is ready to begin!
+    this.state.socket.emit('ready');
+  }
   bindSocket() {
     this.setState({bindedSocket: true})
     let { socket } = this.state;
     socket.emit('join room', this.props.user);
 
+    socket.on('isActive', isActive => {
+      this.setState({ isActive })
+      console.log('isActive = ' + isActive)
+    });
     socket.on('user disconnected', name => {
       alert(name + ' has disconnected')
     });
@@ -24,7 +36,6 @@ class Room extends Component {
       this.setState({display: message})
     });
     this.state.socket.on('message', (message) => {
-      console.log(message)
       this.setState({messages: [...this.state.messages, message]});
     });
     socket.on('set speech', condition => {
@@ -53,10 +64,13 @@ class Room extends Component {
       messages: [],
       message: '',
       socket: null,
-      canTalk: true
+      canTalk: true,
+      isActive: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.bindSocket = this.bindSocket.bind(this);
+
+    this.onReady = this.onReady.bind(this)
   };
   render(){
     return(
@@ -66,6 +80,16 @@ class Room extends Component {
             <h1>36 Questions</h1>
             <p>{this.state.display}</p>
           </div>
+          <button className="btn btn-light" id="on-ready" onClick={this.onReady}>
+            Ready to play
+          </button>
+          { this.state.isActive ? 
+            <button className="btn btn-light on-done" disabled={!this.state.isActive} onClick={() => this.state.socket.emit('done')}>
+              Done answering!
+            </button>
+            : null
+          } 
+          
 
           <ul className="chat list-group">
             {this.state.messages.map((message, i) => {

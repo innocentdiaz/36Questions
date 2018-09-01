@@ -8,8 +8,10 @@ export const fetchUser = (token) => {
       if (res.ok) {
         dispatch({type: 'SET_USER', payload: res.data})
       } else {
-        dispatch({type: 'SET_USER', payload: false})
-        store.remove('TSQ_TOKEN')
+        dispatch({type: 'SET_USER', payload: false});
+        if (res.status == 401) {
+          store.remove('TSQ_TOKEN')
+        }
       }
     });
   }

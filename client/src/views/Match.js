@@ -12,8 +12,9 @@ class Match extends Component {
     let socket = io(config.apiURL + '/matching');
     socket.emit('subscribeToQue', this.props.user);
     socket.on('subscribe success', (que_length) => {
+      let display = que_length > 1 ? `There are ${que_length-1} other users in the que.` : 'Waiting for users to join...'
       this.setState({
-        display: 'Joined matching. There are ' + que_length + ' users matching.',
+        display,
         matching: true
       })
     });

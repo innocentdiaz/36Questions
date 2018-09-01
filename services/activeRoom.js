@@ -8,6 +8,8 @@ module.exports = (io) => {
       nsp,
       id: roomID,
       users: {},
+      currentQuestionIndex: -1, // what question number we are currently at! We start at -1 so that on the first turn, it increases to 0
+      currentTurn: 0, // the user currently answering the question, as they must take turns doing so. toggles between 0 and 1
       join: function (socket) {
         if (Object.keys(this.users).length >= 2) return socket.emit('display', 'This room is full');
         if (this.users[socket.id]) return socket.emit('display', 'You are already in this room');
@@ -21,7 +23,6 @@ module.exports = (io) => {
       handleConnect: function (socket) {
         socket.emit('display', 'Joined room. Waiting for user..');
         if (Object.keys(roomData.users).length == 2) {
-          nsp.in(roomData.id).emit('display', 'User has connected.');
           roomController(roomData);
         }
       },
@@ -31,7 +32,6 @@ module.exports = (io) => {
         if (Object.keys(roomData.users).length == 1) {
           nsp.in(roomData.id).emit('user disconnected', socket._data.firstName)
         } else if (Object.keys(roomData.users).length == 0) {
-          console.log("FILTERING ROOM " + roomID)
           ACTIVE_ROOMS = ACTIVE_ROOMS.filter(r => r.id !== roomID)
         }
       }
