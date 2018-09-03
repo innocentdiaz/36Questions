@@ -4,6 +4,12 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+let { DBHost } = process.env;
+
+if (!DBHost) {
+  throw "MISSING ENVIORMENTAL VARIABLE"
+}
+
 mongoose.connect(process.env.DBHost, { useNewUrlParser: true });
 
 app.use(cors());
