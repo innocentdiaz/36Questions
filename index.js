@@ -20,10 +20,10 @@ app.use(express.json());
 var server = http.createServer(app);
 const io = require('socket.io')(server);
 
-require('./services/routes/auth')(app);
-require('./services/routes/users')(app);
-require('./services/matching')(io);
-require('./services/activeRoom')(io);
+require('./lib/routes/auth')(app);
+require('./lib/routes/users')(app);
+require('./lib/routes/matching')(io);
+require('./lib/services/activeRooms')(io);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.resolve(__dirname, 'client', 'build')))
