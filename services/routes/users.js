@@ -1,10 +1,9 @@
 const User = require('../../lib/schemas/User');
-const bcrypt = require('bcrypt');
 const url = require('url');
-const jwt = require('jsonwebtoken');
+const helpers = require('./helpers');
 
 module.exports = (app) => {
-  app.get('/api/users', function(req, res) {
+  app.get('/users', function(req, res) {
     var url_parts = url.parse(req.url, true);
     var query = url_parts.query;
     let id = query.id;
@@ -19,7 +18,7 @@ module.exports = (app) => {
     })
   });
 
-  app.post('/api/users', function(req, res) {
+  app.post('/users', function(req, res) {
     const email = req.body.email ? req.body.email : false;
     const password = req.body.password ? req.body.password : false;
     const firstName = req.body.firstName ? req.body.firstName : false;
@@ -30,7 +29,7 @@ module.exports = (app) => {
     if (!email || !password || ! firstName) return res.status(405).json({message: 'Missing field(s)'});
     if (email.length <= 5 || password.length <= 6) return res.status(405).json({message: 'Email or password is too short'});
 
-    let hashed = bcrypt.hashSync(password, process.env.saltRounds);
+    let hashed = helpers.hashSync(password);
     
     if (!hashed) return res.status(400).json({message: 'Could not hash password'})
 
@@ -45,7 +44,7 @@ module.exports = (app) => {
 
     User.create(userData, function(err, user) {
       if (err) return res.status(400).json({message: 'Could not create user.. Probably already exists'});
-      let token = jwt.sign({user}, process.env.JWTkey, {expiresIn: 86400 /* expires in 24 hours*/});
+      let token = helpers.signToken({user}, {expiresIn: 86400 /* expires in 24 hours*/});
 
       res.status(200).json({message: 'Created user successfully', user, token})
     });
