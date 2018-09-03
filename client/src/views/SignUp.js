@@ -62,7 +62,7 @@ class SignUp extends Component {
       <div className="main">
         <Header />
         <div className="container-fluid">
-          <h1>Welcome Back</h1>
+          <h1>Welcome!</h1>
           <p>{this.state.display}</p>
           <form onSubmit={this.handleSubmit} encType="multipart/form-data">
             <div className="form-group">
