@@ -114,7 +114,7 @@ class Room extends Component {
             <p>{this.state.display}</p>
           </div>
           <button className={'btn btn-light on-done ' + (isActive === false ? 'hidden' : isActive === true ? '' : 'loading')} disabled={!isActive} onClick={this.doneAnswering}>
-            {isActive === null ? <i class="fas fa-spinner"></i> : null} Done answering!
+            {isActive === null ? <i className="fas fa-spinner"></i> : null} Done answering!
           </button>
           <button className="btn btn-light" id="on-ready" onClick={this.onReady}>
             Ready to play
