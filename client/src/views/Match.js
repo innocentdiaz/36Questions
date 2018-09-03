@@ -11,15 +11,15 @@ class Match extends Component {
   subscribeToSearch() {
     let socket = io(api.getBaseURL() + '/matching');
     socket.emit('subscribeToQue', this.props.user);
+    
     socket.on('subscribe success', (que_length) => {
-      let display = que_length > 1 ? `There are ${que_length-1} other users in the que.` : 'Waiting for users to join...'
       this.setState({
-        display,
         matching: true
       })
     });
     socket.on('que length', (que_length) => {
-      this.setState({display: 'There are ' + que_length + ' user(s) in the que.'})
+      let display = que_length > 1 ? `There are ${que_length-1} other users in the que.` : 'Waiting for users to join...'
+      this.setState({ display })
     })
     socket.on('subscribe disconnect', () => {
       this.setState({display: 'Disconnected from matching', matching: false})

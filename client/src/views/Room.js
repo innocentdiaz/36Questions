@@ -28,9 +28,9 @@ class Room extends Component {
 
     this.setState({message: newMessage});
 
-    if (oldMessage == '' && newMessage.length > 0) { // if the old message is empty and we started typing
+    if (oldMessage === '' && newMessage.length > 0) { // if the old message is empty and we started typing
       socket.emit('typing', true)
-    } else if (oldMessage.length > 0 && newMessage == '') { // else if old message is not empty and we just made it empty
+    } else if (oldMessage.length > 0 && newMessage === '') { // else if old message is not empty and we just made it empty
       socket.emit('typing', false)
     }
   }
