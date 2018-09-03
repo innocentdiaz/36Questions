@@ -13,7 +13,7 @@ const redux_store = createStore(reducers, applyMiddleware(thunk))
 class App extends Component {
   componentWillMount() {
     let jwt = store.get('TSQ_TOKEN');
-
+  
     if (!!jwt) {
       redux_store.dispatch(fetchUser(jwt));
     }

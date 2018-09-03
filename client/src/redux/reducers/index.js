@@ -1,13 +1,14 @@
 import { combineReducers } from 'redux';
 
-const userReducer = (state = null, action) => {
+const userReducer = (state = {}, action) => {
   switch(action.type) {
     case "SET_USER":
-      return action.payload
+    console.log(action.payload)
+      return {...action.payload, loading: false}
     break;
 
     default:
-      return state;
+      return {...state, loading: true};
   }
 }
 

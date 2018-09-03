@@ -30,10 +30,10 @@ class Room extends Component {
     // Let the socket know this user is ready to begin!
     this.state.socket.emit('ready');
   }
-  bindSocket() {
-    this.setState({bindedSocket: true})
-    let { socket } = this.state;
-    socket.emit('join room', this.props.user);
+  bindSocket(socket) {
+    this.setState({ bindedSocket: true })
+
+    socket.emit('join room', this.props.user); // let socket know we want to join
 
     socket.on('joined', ({res, message}) => {
       if (!res) {
@@ -43,8 +43,10 @@ class Room extends Component {
       this.setState({ joined: res });
     });
     socket.on('isActive', isActive => {
+      if (isActive != this.state.isActive) { // new `isActive` state
+        turnSound.play();
+      }
       this.setState({ isActive });
-      turnSound.play();
     });
     socket.on('user disconnected', name => {
       leaveSound.play();
@@ -54,27 +56,28 @@ class Room extends Component {
     socket.on('display', (message) => {
       this.setState({display: message})
     });
-    this.state.socket.on('message', (message) => {
+    socket.on('message', (message) => {
       messageSound.play()
       this.setState({messages: [...this.state.messages, message]});
-    });
-    socket.on('set speech', condition => {
-      this.setState({canTalk: condition})
     });
   }
   componentDidMount() {
     const { roomID } = this.props.match.params
+    let socket = io(api.getBaseURL() + '/rooms?id=' + roomID)
 
     if (!roomID) return window.location = '/'
-    this.setState({socket: io(api.getBaseURL() + '/rooms?id=' + roomID)});
+    this.setState({socket});
   }
-  componentDidUpdate() {
-    if (this.state.bindedSocket) return
-    if (!this.props.user) return
-    if (!this.state.socket) return
+  componentDidUpdate() { // wait till we get the user and socket
+    let { user } = this.props;
+    let { bindedSocket, socket } = this.state;
 
-    this.bindSocket()
-  };
+    if (user.loading) return
+    if (bindedSocket) return
+    if (!socket) return
+
+    this.bindSocket(socket);
+  }
   constructor(props){
     super(props);
 
@@ -97,7 +100,7 @@ class Room extends Component {
     if (joined === null) {
       return (<div className="container-fluid">
         <div className="container">
-          <p><i className="fas fa-spinner"></i> Paitiently joining...</p>
+          <p><i className="fas fa-spinner"></i> Patiently joining...</p>
         </div>
       </div>)
     }
@@ -130,7 +133,7 @@ class Room extends Component {
 
           </ul>
           <form className="input-group form-group" onSubmit={this.handleSubmit}>
-            <input className="form-control" disabled={!this.state.canTalk} readOnly={!this.state.canTalk} value={this.state.message} onChange={event => this.setState({message: event.target.value})} placeholder="Type a message here" />
+            <input className="form-control" value={this.state.message} onChange={event => this.setState({message: event.target.value})} placeholder="Type a message here" />
             <button className="btn btn-light">Send</button>
           </form>
         </div>
