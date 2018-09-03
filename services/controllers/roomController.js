@@ -5,25 +5,15 @@ module.exports = (roomData) => { // users have been paired and can interact by n
     roomData.nsp.in(roomData.id).emit(type, payload);
   };
 
-  const set_speech = (users, condition) => {
-    Object.values(users).forEach(user => {
-      user.canTalk = condition;
-      user.emit('set speech', condition);
-    });
-  };
   const U1 = Object.values(roomData.users)[0];
   const U2 = Object.values(roomData.users)[1];
 
-  set_speech([U1, U2], true)
-
   Object.values(roomData.users).forEach(Un => { // handle events for each user
-    Un.on('message', content => { // Handle message event for each user
-      if (!Un.canTalk) return Un.emit('display', 'You cannot talk right now');
-      
+    Un.on('message', content => { // Handle message event for each user      
       emit_to_room('message', {sender: Un._data.firstName, content})
     });
     Un.on('ready', () => {
-      if (roomData.currentQuestionIndex > -1)  { // game has already started
+      if (roomData.isActive)  { // game is already going
         Un.emit('display', 'Game has already started');
         return
       }
@@ -41,27 +31,29 @@ module.exports = (roomData) => { // users have been paired and can interact by n
       
       if (U1.isReadyToPlay && U2.isReadyToPlay) {
         roomData.activeUser.emit('isActive', true);
+        roomData.isActive = true;
         nextQuestion(); // here is the first question!
-
-        // we dont need these anymore!
-        delete U1.isReadyToPlay
-        delete U2.isReadyToPlay
       } else { // make sure the game still has not started and we are just lagging
         emit_to_room('display', Un._data.firstName + ' is ready to play!');
       }
     });
     Un.on('done', () => { // the user is done answering question
-      let { activeUser } = roomData;
+      let { activeUser, inactiveUser, users } = roomData;
       if (!activeUser) {
         return Un.emit('display', 'No active user');
       }
+      if (!inactiveUser) {
+        return Un.emit('display', 'Match is missing user...');
+      }
+      if (!roomData.isActive) {
+        Un.emit('display', 'Waiting for all users to be ready.')
+        return Un.emit('isActive', activeUser.id === Un.id)
+      }
       if (activeUser.id == Un.id) { // if they were the active user
         // toggle the active / inactive users
-        let { users, inactiveUser } = roomData;
-
         roomData.activeUser = users[inactiveUser.id];
         roomData.activeUser.emit('isActive', true);
-        roomData.inactiveUser = roomData.users[Un.id];
+        roomData.inactiveUser = users[Un.id];
         roomData.inactiveUser.emit('isActive', false);
         // move onto the next question!
         nextQuestion()
