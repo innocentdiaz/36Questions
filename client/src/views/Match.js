@@ -2,14 +2,14 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Header from '../components/Header';
 import io from 'socket.io-client'
-import config from '../config';
+import api from '../api';
 
 class Match extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.user === false) window.location = '/login';
   }
   subscribeToSearch() {
-    let socket = io(config.apiURL + '/matching');
+    let socket = io(api.getBaseURL() + '/matching');
     socket.emit('subscribeToQue', this.props.user);
     socket.on('subscribe success', (que_length) => {
       let display = que_length > 1 ? `There are ${que_length-1} other users in the que.` : 'Waiting for users to join...'
@@ -26,7 +26,7 @@ class Match extends Component {
     });
     socket.on('match success', ({name, roomName}) => {
       alert('You have been matched with ' + name + '. Joining room.');
-      window.location = '/room?id=' + roomName;
+      window.location = '/room/' + roomName;
     });
     socket.on('disconnect', () => {
       this.setState({

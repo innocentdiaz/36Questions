@@ -21,9 +21,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": {
-    "/api/*": {
-      "target": "http://localhost:5000"
-    }
-  }
+  "proxy": "http://localhost:5000"
 }

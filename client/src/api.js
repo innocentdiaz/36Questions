@@ -1,9 +1,10 @@
 import {create} from 'apisauce'
-import config from './config.js';
+
+let apiBaseURL = process.env.PORT || 'http://localhost:5000'
 
 // define the api
 const api = create({
-  baseURL: config.apiURL + '/api',
+  baseURL: apiBaseURL,
   headers: {'Accept': 'application/vnd.github.v3+json'}
 });
 

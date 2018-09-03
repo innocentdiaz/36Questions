@@ -3,7 +3,7 @@ import store from 'store';
 
 export const fetchUser = (token) => {
   return dispatch => {
-    api.get('/auth?token=' + token)
+    api.get(`/auth/${token}`)
     .then(res => {
       if (res.ok) {
         dispatch({type: 'SET_USER', payload: res.data})

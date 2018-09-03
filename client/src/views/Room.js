@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import io from 'socket.io-client';
-import config from '../config';
+import api from '../api';
 import { connect } from 'react-redux';
 import '../assets/stylesheets/chat.css';
 import messageAudio from '../assets/audio/message.mp3';
@@ -57,11 +57,10 @@ class Room extends Component {
     });
   }
   componentDidMount() {
-    const parsed = queryString.parse(this.props.location.search);
-    let roomID = parsed.id ? parsed.id : false;
+    const { roomID } = this.props.match.params
 
     if (!roomID) return window.location = '/'
-    this.setState({socket: io(config.apiURL + '/rooms?id=' + roomID)});
+    this.setState({socket: io(api.getBaseURL() + '/rooms?id=' + roomID)});
   }
   componentDidUpdate() {
     if (this.state.bindedSocket) return
