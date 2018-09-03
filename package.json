@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"nodemon index\" \"cd client && npm start\" ",
-    "postinstall": "cd client && npm install && npm run build && cd ..",
+    "dev": "concurrently \"DBHost=mongodb://localhost:27017/tsquestions saltRounds=4 JWTKey=thisisajwtkey nodemon index\" \"cd client && npm start\" ",
+    "heroku-postbuild": "cd client && npm install && npm run build && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "JohnCdf",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.0",
+    "concurrently": "^4.0.1",
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
