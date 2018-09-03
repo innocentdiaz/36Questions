@@ -1,4 +1,3 @@
-const url = require('url');
 const User = require('../../lib/schemas/User');
 const bcrypt = require('bcrypt');
 const helpers = require('./helpers');

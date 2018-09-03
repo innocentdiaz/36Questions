@@ -1,12 +1,9 @@
 const User = require('../../lib/schemas/User');
-const url = require('url');
 const helpers = require('./helpers');
 
 module.exports = (app) => {
-  app.get('/users', function(req, res) {
-    var url_parts = url.parse(req.url, true);
-    var query = url_parts.query;
-    let id = query.id;
+  app.get('/users/:id', function(req, res) {
+    let id = req.params.id;
 
     User.findOne({_id: id})
     .select('firstName lastName')
