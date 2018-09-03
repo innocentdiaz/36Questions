@@ -57,6 +57,7 @@ module.exports = (roomData) => { // users have been paired and can interact by n
         // move onto the next question!
         nextQuestion()
       } else { // its not your turn
+        Un.emit('isActive', false);
         Un.emit('display', 'Its not your turn yet!');
       }
     });

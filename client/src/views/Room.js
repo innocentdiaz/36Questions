@@ -18,6 +18,10 @@ class Room extends Component {
     this.state.socket.emit('message', this.state.message);
     this.setState({message: ''});
   }
+  doneAnswering() {
+    this.setState({ isActive: false }); // predicting server response
+    this.state.socket.emit('done'); // let the server know we are done answering
+  }
   onReady() {
     // We are ready to start the game
     let btn = document.getElementById('on-ready');
@@ -32,8 +36,8 @@ class Room extends Component {
     socket.emit('join room', this.props.user);
 
     socket.on('isActive', isActive => {
-      turnSound.play()
-      this.setState({ isActive })
+      this.setState({ isActive });
+      turnSound.play();
     });
     socket.on('user disconnected', name => {
       leaveSound.play();
@@ -78,7 +82,8 @@ class Room extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.bindSocket = this.bindSocket.bind(this);
 
-    this.onReady = this.onReady.bind(this)
+    this.onReady = this.onReady.bind(this);
+    this.doneAnswering = this.doneAnswering.bind(this)
   };
   render(){
     return(
@@ -89,7 +94,7 @@ class Room extends Component {
             <p>{this.state.display}</p>
           </div>
           { this.state.isActive ? 
-            <button className="btn btn-light on-done" disabled={!this.state.isActive} onClick={() => this.state.socket.emit('done')}>
+            <button className="btn btn-light on-done" disabled={!this.state.isActive} onClick={this.doneAnswering}>
               Done answering!
             </button>
             : null
