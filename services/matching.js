@@ -65,7 +65,7 @@ module.exports = (io) => {
     U2.emit('match success', {name: U1._data.firstName, roomName});
   }
 
-  var nsp = io.of('/matching');
+  var nsp = io.of('/api/matching');
 
   nsp.on('connection', function(socket) {
     socket.on('subscribeToQue', (data) => {

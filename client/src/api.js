@@ -1,6 +1,6 @@
 import {create} from 'apisauce'
 
-let apiBaseURL = process.env.NODE_ENV == 'production' ? process.env.PORT : 'http://localhost:5000'
+let apiBaseURL = process.env.NODE_ENV == 'production' ? 'https://thirtysixq.herokuapp.com/api' : 'http://localhost:5000/api'
 
 // define the api
 const api = create({

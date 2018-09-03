@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const helpers = require('./helpers');
 
 module.exports = (app) => {
-  app.get('/auth/:token', (req, res) => {
+  app.get('/api/auth/:token', (req, res) => {
     let token = req.params.token;
 
     if (!token) return res.status(422).json({message: 'Missing token'})
@@ -19,7 +19,7 @@ module.exports = (app) => {
       res.status(404).json({ message: 'Could not find user' })
     });
   });
-  app.post('/auth', (req, res) => {
+  app.post('/api/auth', (req, res) => {
     if (!req.body) return res.status(405).json({message: 'No fields provided'});
     let email = req.body.email ? req.body.email : false;
     let password = req.body.password ? req.body.password: false;

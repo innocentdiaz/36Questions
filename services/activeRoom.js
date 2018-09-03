@@ -41,7 +41,7 @@ module.exports = (io) => {
     return roomData;
   };
 
-  var nsp = io.of('/rooms')
+  var nsp = io.of('/api/rooms')
   nsp.on('connection', function(socket) {
     socket.on('join room', function(userData) {
       let roomID = socket.handshake.query.id ? socket.handshake.query.id : false;

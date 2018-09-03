@@ -2,7 +2,7 @@ const User = require('../../lib/schemas/User');
 const helpers = require('./helpers');
 
 module.exports = (app) => {
-  app.get('/users/:id', function(req, res) {
+  app.get('/api/users/:id', function(req, res) {
     let id = req.params.id;
 
     User.findOne({_id: id})
@@ -15,7 +15,7 @@ module.exports = (app) => {
     })
   });
 
-  app.post('/users', function(req, res) {
+  app.post('/api/users', function(req, res) {
     const email = req.body.email ? req.body.email : false;
     const password = req.body.password ? req.body.password : false;
     const firstName = req.body.firstName ? req.body.firstName : false;
