@@ -4,8 +4,7 @@ let apiBaseURL = process.env.NODE_ENV == 'production' ? process.env.PORT : 'http
 
 // define the api
 const api = create({
-  baseURL: apiBaseURL,
-  headers: {'Accept': 'application/vnd.github.v3+json'}
+  baseURL: apiBaseURL
 });
 
 api.addResponseTransform(res => {
