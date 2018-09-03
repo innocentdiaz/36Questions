@@ -1,16 +1,12 @@
 .header-main {
   display: inline-flex;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-
+  width: 100%;
   background-color: transparent;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin: 10px;
   padding: 10px;
+  margin-bottom: 10px;
   border-bottom: 1px solid #865a56bf;
 }
 .header-main a {

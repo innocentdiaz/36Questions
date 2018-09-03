@@ -5,7 +5,9 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  min-height: 50vh;
+}
+.display-1 {
+  color: brown;
 }
 .home-screen h1 {
   font-size: xx-large;

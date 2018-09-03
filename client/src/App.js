@@ -20,11 +20,9 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="main">
         <Provider store={redux_store}>
           <Router />
         </Provider>
-      </div>
     );
   }
 }
