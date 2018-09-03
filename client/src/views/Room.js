@@ -14,10 +14,25 @@ let leaveSound = new Audio(leaveAudio);
 
 class Room extends Component {
   handleSubmit(event) {
+    let { socket } = this.state;
     event.preventDefault();
 
-    this.state.socket.emit('message', this.state.message);
+    socket.emit('message', this.state.message);
+    socket.emit('typing', false)
     this.setState({message: ''});
+  }
+  updateMessage(event) {
+    let { socket } = this.state;
+    let newMessage = event.target.value;
+    let oldMessage = this.state.message;
+
+    this.setState({message: newMessage});
+
+    if (oldMessage == '' && newMessage.length > 0) { // if the old message is empty and we started typing
+      socket.emit('typing', true)
+    } else if (oldMessage.length > 0 && newMessage == '') { // else if old message is not empty and we just made it empty
+      socket.emit('typing', false)
+    }
   }
   doneAnswering() {
     this.setState({ isActive: null }); // loading
@@ -50,10 +65,16 @@ class Room extends Component {
     socket.on('user disconnected', name => {
       leaveSound.play();
 
-      this.setState({display: name + ' was disconnected... Waiting for users...'})
+      this.setState({
+        display: name + ' was disconnected... Waiting for users...',
+        typing: { status: false }
+      })
     });
     socket.on('display', (message) => {
       this.setState({display: message})
+    });
+    socket.on('typing', ({name, status}) => {
+      this.setState({ typing: {name, status} })
     });
     socket.on('message', (message) => {
       messageSound.play()
@@ -86,15 +107,17 @@ class Room extends Component {
       message: '',
       socket: null,
       joined: null,
-      isActive: false
+      isActive: false,
+      typing: {status: null}
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.bindSocket = this.bindSocket.bind(this);
     this.onReady = this.onReady.bind(this);
-    this.doneAnswering = this.doneAnswering.bind(this)
+    this.doneAnswering = this.doneAnswering.bind(this);
+    this.updateMessage = this.updateMessage.bind(this)
   };
   render(){
-    let { isActive, joined } = this.state;
+    let { isActive, joined, typing } = this.state;
 
     if (joined === null) {
       return (<div className="container-fluid">
@@ -121,9 +144,13 @@ class Room extends Component {
           </button>
           <Chat data={this.state.messages}/>
           <form className="input-group form-group" onSubmit={this.handleSubmit}>
-            <input className="form-control" value={this.state.message} onChange={event => this.setState({message: event.target.value})} placeholder="Type a message here" />
+            <input className="form-control" value={this.state.message} onChange={event => this.updateMessage(event)} placeholder="Type a message here" />
             <button className="btn btn-light">Send</button>
           </form>
+          <div className="typing">
+            { typing.status ?
+              typing.name + ' is typing...': ''}
+          </div>
         </div>
 
       </div>
