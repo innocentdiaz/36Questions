@@ -34,9 +34,13 @@ module.exports = (roomData) => { // users have been paired and can interact by n
         roomData.activeUser = roomData.users[Un.id]
       }
       
-      if (U1.isReadyToPlay && U2.isReadyToPlay) { // START GAME!
-        Un.emit('start')
-        nextQuestion() // here is the first question!
+      if (U1.isReadyToPlay && U2.isReadyToPlay) {
+        // we dont need these anymore!
+        delete U1.isReadyToPlay
+        delete U2.isReadyToPlay
+
+        roomData.activeUser.emit('isActive', true);
+        nextQuestion(); // here is the first question!
       } else {
         emit_to_room('display', Un._data.firstName + ' is ready to play!')
       }
@@ -44,12 +48,21 @@ module.exports = (roomData) => { // users have been paired and can interact by n
     Un.on('done', () => { // the user is done answering question
       if (roomData.activeUser.id == Un.id) { // if they were the active user
         // toggle the active / inactive users
-        roomData.activeUser = roomData.users[roomData.inactiveUser.id]
-        roomData.inactiveUser = roomData.users[Un.id]
+        let { users, inactiveUser } = roomData;
 
+        roomData.activeUser = users[inactiveUser.id];
+        roomData.activeUser.emit('isActive', true);
+        roomData.inactiveUser = roomData.users[Un.id];
+        roomData.inactiveUser.emit('isActive', false);
+
+        console.log('= TOGGLE =')
+        console.log('ACTIVE: ' + roomData.activeUser._data.firstName);
+        console.log('INACTIVE: ' + Un._data.firstName);
+        console.log('==========')
         // move onto the next question!
         nextQuestion()
       } else { // its not your turn
+        console.log(Un._data.firstName + ' is not active. ' + roomData.activeUser._data.firstName + ' is!');
         Un.emit('display', 'Its not your turn yet!');
       }
     });
@@ -70,14 +83,13 @@ module.exports = (roomData) => { // users have been paired and can interact by n
   
     let question = questions[roomData.currentQuestionIndex];
     if (question) {
-      U1.emit('isActive', U1.id == roomData.activeUser.id) // Are you active?
-      U2.emit('isActive', U2.id == roomData.activeUser.id) // or are you active?
+      let { activeUser, inactiveUser } = roomData;
       if (roomData.currentTurn == 1) {
-        roomData.activeUser.emit('display', 'Your turn to answer. ' + question.body)
-        roomData.inactiveUser.emit('display', `${roomData.activeUser._data.firstName}'s turn to answer. "${question.body}"`)
+        activeUser.emit('display', 'Your turn to answer. ' + question.body)
+        inactiveUser.emit('display', `${activeUser._data.firstName}'s turn to answer. "${question.body}"`)
       } else {
-        roomData.activeUser.emit('display', 'Question: ' + question.body)
-        roomData.inactiveUser.emit('display', `Question for ${roomData.activeUser._data.firstName}. "${question.body}"`)
+        activeUser.emit('display', 'Question: ' + question.body)
+        inactiveUser.emit('display', `Question for ${activeUser._data.firstName}. "${question.body}"`)
       }
     } else {
       emit_to_room('end');

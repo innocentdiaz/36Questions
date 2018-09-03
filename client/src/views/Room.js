@@ -5,12 +5,10 @@ import { connect } from 'react-redux';
 import '../assets/stylesheets/chat.css';
 import messageAudio from '../assets/audio/message.mp3';
 import turnAudio from '../assets/audio/turn.mp3';
-import joinAudio from '../assets/audio/join.mp3';
 import leaveAudio from '../assets/audio/leave.mp3';
 
 let messageSound = new Audio(messageAudio);
 let turnSound = new Audio(turnAudio);
-let joinSound = new Audio(joinAudio);
 let leaveSound = new Audio(leaveAudio);
 
 class Room extends Component {
@@ -33,9 +31,6 @@ class Room extends Component {
     let { socket } = this.state;
     socket.emit('join room', this.props.user);
 
-    socket.on('start', () => {
-      joinSound.play()
-    });
     socket.on('isActive', isActive => {
       turnSound.play()
       this.setState({ isActive })
