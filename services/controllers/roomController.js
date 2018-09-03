@@ -35,14 +35,14 @@ module.exports = (roomData) => { // users have been paired and can interact by n
       }
       
       if (U1.isReadyToPlay && U2.isReadyToPlay) {
+        roomData.activeUser.emit('isActive', true);
+        nextQuestion(); // here is the first question!
+        
         // we dont need these anymore!
         delete U1.isReadyToPlay
         delete U2.isReadyToPlay
-
-        roomData.activeUser.emit('isActive', true);
-        nextQuestion(); // here is the first question!
-      } else {
-        emit_to_room('display', Un._data.firstName + ' is ready to play!')
+      } else if (roomData.currentQuestionIndex == -1) { // make sure the game still has not started and we are just lagging
+        emit_to_room('display', Un._data.firstName + ' is ready to play!');
       }
     });
     Un.on('done', () => { // the user is done answering question
