@@ -43,9 +43,7 @@ class Room extends Component {
       this.setState({ joined: res });
     });
     socket.on('isActive', isActive => {
-      if (isActive != this.state.isActive) { // new `isActive` state
-        turnSound.play();
-      }
+      turnSound.play();
       this.setState({ isActive });
     });
     socket.on('user disconnected', name => {
