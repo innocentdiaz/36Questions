@@ -18,7 +18,7 @@ class Router extends Component {
           <Route path="/match" component={Match} />
           <Route path="/signup" component={SignUp} />
           <Route path="/login" component={LogIn} />
-          <Route path="/room" component={Room} />
+          <Route path="/room/:roomID" component={Room} />
         </div>
       </BrowserRouter>
     );
