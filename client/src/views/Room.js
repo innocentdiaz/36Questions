@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Chat from '../components/Chat';
 import io from 'socket.io-client';
 import api from '../api';
 import { connect } from 'react-redux';
@@ -118,18 +119,7 @@ class Room extends Component {
           <button className="btn btn-light" id="on-ready" onClick={this.onReady}>
             Ready to play
           </button>
-
-          <ul className="chat list-group">
-            {this.state.messages.map((message, i) => {
-              return(<li key={i} className={message.sender === this.props.user.firstName ? 'list-group-item text-right' : 'list-group-item text-left'}>
-                <div className={message.sender === this.props.user.firstName ? "d-flex w-100 justify-content-end" : "d-flex w-100 justify-content-between"}>
-                  <small>{message.sender}</small>
-                </div>
-                <p className="mb-1">{message.content}</p>
-              </li>)
-            })}
-
-          </ul>
+          <Chat data={this.state.messages}/>
           <form className="input-group form-group" onSubmit={this.handleSubmit}>
             <input className="form-control" value={this.state.message} onChange={event => this.setState({message: event.target.value})} placeholder="Type a message here" />
             <button className="btn btn-light">Send</button>
