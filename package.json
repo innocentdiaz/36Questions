@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"DBHost=mongodb://localhost:27017/tsquestions saltRounds=4 JWTKey=thisisajwtkey nodemon index\" \"cd client && npm start\" ",
+    "production": "DBHost=mongodb://localhost:27017/tsquestions saltRounds=4 JWTKey=thisisajwtkey NODE_ENV=production nodemon index",
     "heroku-postbuild": "cd client && npm install && npm run build && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
