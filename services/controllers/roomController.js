@@ -37,7 +37,7 @@ module.exports = (roomData) => { // users have been paired and can interact by n
       if (U1.isReadyToPlay && U2.isReadyToPlay) {
         roomData.activeUser.emit('isActive', true);
         nextQuestion(); // here is the first question!
-        
+
         // we dont need these anymore!
         delete U1.isReadyToPlay
         delete U2.isReadyToPlay
@@ -54,15 +54,9 @@ module.exports = (roomData) => { // users have been paired and can interact by n
         roomData.activeUser.emit('isActive', true);
         roomData.inactiveUser = roomData.users[Un.id];
         roomData.inactiveUser.emit('isActive', false);
-
-        console.log('= TOGGLE =')
-        console.log('ACTIVE: ' + roomData.activeUser._data.firstName);
-        console.log('INACTIVE: ' + Un._data.firstName);
-        console.log('==========')
         // move onto the next question!
         nextQuestion()
       } else { // its not your turn
-        console.log(Un._data.firstName + ' is not active. ' + roomData.activeUser._data.firstName + ' is!');
         Un.emit('display', 'Its not your turn yet!');
       }
     });
