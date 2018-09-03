@@ -11,8 +11,9 @@ module.exports = (io) => {
       currentQuestionIndex: -1, // what question number we are currently at! We start at -1 so that on the first turn, it increases to 0
       currentTurn: 0, // the user currently answering the question, as they must take turns doing so. toggles between 0 and 1
       join: function (socket) {
-        if (Object.keys(this.users).length >= 2) return socket.emit('display', 'This room is full');
-        if (this.users[socket.id]) return socket.emit('display', 'You are already in this room');
+        let { users } = this;
+        if (Object.keys(users).length >= 2) return socket.emit('display', 'This room is full');
+        if (users[socket.id]) return socket.emit('display', 'You are already in this room');
         
         socket.join(roomData.id, () => {
           roomData.users[socket.id] = socket;
@@ -21,6 +22,7 @@ module.exports = (io) => {
         })
       },
       handleConnect: function (socket) {
+        socket.emit('joined', { res: true })
         socket.emit('display', 'Joined room. Waiting for user..');
         if (Object.keys(roomData.users).length == 2) {
           roomController(roomData);
@@ -48,8 +50,8 @@ module.exports = (io) => {
 
       let {firstName, _id} = userData;
 
-      if (!firstName || !_id) return socket.emit('display', 'invalid information');
-      if (!roomID || !userData) return socket.emit('display', 'invalid information');
+      if (!roomID || !userData) return socket.emit('joined', { message: 'Missing data', res: false });
+      if (!firstName || !_id) return socket.emit('joined', { message: 'Missing user data', res: false });
 
       socket._data = userData;
       

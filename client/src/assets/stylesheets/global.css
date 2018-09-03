@@ -24,3 +24,14 @@
   transition: .2s all ease-in-out;
   opacity: 0;
 }
+
+.hidden {
+  display: none;
+}
+
+.fa-spinner {
+  animation: spin 700ms linear infinite;
+}
+@keyframes spin {
+  to {transform:rotate(360deg);}
+}

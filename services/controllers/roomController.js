@@ -23,15 +23,20 @@ module.exports = (roomData) => { // users have been paired and can interact by n
       emit_to_room('message', {sender: Un._data.firstName, content})
     });
     Un.on('ready', () => {
+      if (roomData.currentQuestionIndex > -1)  { // game has already started
+        Un.emit('display', 'Game has already started');
+        return
+      }
       // this user is ready to play
+      let { id } = Un;
       Un.isReadyToPlay = true
       
       // when a user is ready to play, assign them to inactive if there an active user
       // else if the is no active user, they will be the active user
       if (roomData.activeUser) {
-        roomData.inactiveUser = roomData.users[Un.id]
+        roomData.inactiveUser = roomData.users[id]
       } else {
-        roomData.activeUser = roomData.users[Un.id]
+        roomData.activeUser = roomData.users[id]
       }
       
       if (U1.isReadyToPlay && U2.isReadyToPlay) {
@@ -41,12 +46,16 @@ module.exports = (roomData) => { // users have been paired and can interact by n
         // we dont need these anymore!
         delete U1.isReadyToPlay
         delete U2.isReadyToPlay
-      } else if (roomData.currentQuestionIndex == -1) { // make sure the game still has not started and we are just lagging
+      } else { // make sure the game still has not started and we are just lagging
         emit_to_room('display', Un._data.firstName + ' is ready to play!');
       }
     });
     Un.on('done', () => { // the user is done answering question
-      if (roomData.activeUser.id == Un.id) { // if they were the active user
+      let { activeUser } = roomData;
+      if (!activeUser) {
+        return Un.emit('display', 'No active user');
+      }
+      if (activeUser.id == Un.id) { // if they were the active user
         // toggle the active / inactive users
         let { users, inactiveUser } = roomData;
 

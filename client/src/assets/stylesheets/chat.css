@@ -8,3 +8,6 @@
 .chat li {
   color: #866a7e;
 }
+.loading {
+  opacity: .7;
+}

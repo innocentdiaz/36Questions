@@ -19,13 +19,13 @@ class Room extends Component {
     this.setState({message: ''});
   }
   doneAnswering() {
-    this.setState({ isActive: false }); // predicting server response
+    this.setState({ isActive: null }); // loading
     this.state.socket.emit('done'); // let the server know we are done answering
   }
   onReady() {
     // We are ready to start the game
     let btn = document.getElementById('on-ready');
-    btn.className += ' fade-out';
+    btn.className += ' hidden';
 
     // Let the socket know this user is ready to begin!
     this.state.socket.emit('ready');
@@ -35,6 +35,13 @@ class Room extends Component {
     let { socket } = this.state;
     socket.emit('join room', this.props.user);
 
+    socket.on('joined', ({res, message}) => {
+      if (!res) {
+        alert(message)
+      }
+
+      this.setState({ joined: res });
+    });
     socket.on('isActive', isActive => {
       this.setState({ isActive });
       turnSound.play();
@@ -76,16 +83,27 @@ class Room extends Component {
       messages: [],
       message: '',
       socket: null,
-      canTalk: true,
+      joined: null,
       isActive: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.bindSocket = this.bindSocket.bind(this);
-
     this.onReady = this.onReady.bind(this);
     this.doneAnswering = this.doneAnswering.bind(this)
   };
   render(){
+    let { isActive, joined } = this.state;
+
+    if (joined === null) {
+      return (<div className="container-fluid">
+        <div className="container">
+          <p><i className="fas fa-spinner"></i> Paitiently joining...</p>
+        </div>
+      </div>)
+    }
+    if (joined === false) {
+      return <p>Could not join room</p>
+    }
     return(
       <div className="chat-container">
         <div className="container-fluid">
@@ -93,12 +111,9 @@ class Room extends Component {
             <h1>36 Questions</h1>
             <p>{this.state.display}</p>
           </div>
-          { this.state.isActive ? 
-            <button className="btn btn-light on-done" disabled={!this.state.isActive} onClick={this.doneAnswering}>
-              Done answering!
-            </button>
-            : null
-          } 
+          <button className={'btn btn-light on-done ' + (isActive === false ? 'hidden' : isActive === true ? '' : 'loading')} disabled={!isActive} onClick={this.doneAnswering}>
+            {isActive === null ? <i class="fas fa-spinner"></i> : null} Done answering!
+          </button>
           <button className="btn btn-light" id="on-ready" onClick={this.onReady}>
             Ready to play
           </button>
