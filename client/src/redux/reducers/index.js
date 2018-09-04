@@ -6,7 +6,7 @@ const userReducer = (state = null, action) => {
       return {...action.payload, loading: false}
 
     default:
-      return {...state, loading: true};
+      return state;
   }
 }
 
