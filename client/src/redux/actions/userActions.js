@@ -6,12 +6,14 @@ export const fetchUser = (token) => {
     api.get(`/auth/${token}`)
     .then(res => {
       if (res.ok) {
-        dispatch(setUser(res.data))
+        dispatch(
+          setUser({...res.data, authToken: token})
+        )
       } else {
         if (res.status === 401) {
           store.remove('TSQ_TOKEN')
         }
-        dispatch(setUser(false));
+        dispatch(setUserDefault());
       }
     });
   }
@@ -20,4 +22,7 @@ export const fetchUser = (token) => {
 export const setUser = user => ({
   type: 'SET_USER',
   payload: user
-})
+});
+export const setUserDefault = () => ({
+  type: 'SET_USER_DEFAULT'
+});
