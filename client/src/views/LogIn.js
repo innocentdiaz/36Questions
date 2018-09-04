@@ -6,8 +6,9 @@ import store from 'store';
 import {setUser} from '../redux/actions/userActions';
 
 class LogIn extends Component {
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user) window.location = '/';
+  componentDidUpdate() {
+    let { user } = this.props;
+    if (user.authenticated) window.location = '/';
   }
   handleSubmit(event) {
     this.setState({display: 'Logging in'});

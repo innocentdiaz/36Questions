@@ -93,6 +93,9 @@ class Room extends Component {
     let { bindedSocket, socket } = this.state;
 
     if (user.loading) return
+    if (!user.authenticated) {
+      return window.location = '/login'
+    }
     if (bindedSocket) return
     if (!socket) return
 

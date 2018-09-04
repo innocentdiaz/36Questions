@@ -6,8 +6,9 @@ import api from '../api';
 import {setUser} from '../redux/actions/userActions';
 
 class SignUp extends Component {
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user) window.location = '/';
+  componentDidUpdate() {
+    let { user } = this.props;
+    if (user.authenticated) window.location = '/';
   }
   handleSelect(key, event) {
     if (key === 'gender') {
