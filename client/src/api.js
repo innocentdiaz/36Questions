@@ -7,10 +7,4 @@ const api = create({
   baseURL: apiBaseURL
 });
 
-api.addResponseTransform(res => {
-  if (!res.data) {
-    res.data = {}
-  }
-})
-
 export default api;
