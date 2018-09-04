@@ -80,6 +80,19 @@ class Room extends Component {
       messageSound.play()
       this.setState({messages: [...this.state.messages, message]});
     });
+    socket.on('question index', currentQuestionIndex => {
+      this.setState({
+        currentQuestionIndex
+      });
+    });
+    socket.on('disconnect', () => {
+      this.setState({
+        isActive: false,
+        display: 'Disconnected from room',
+        joined: false,
+        typing: { status: null }
+      });
+    });
   }
   componentDidMount() {
     const { roomID } = this.props.match.params
@@ -111,7 +124,8 @@ class Room extends Component {
       socket: null,
       joined: null,
       isActive: false,
-      typing: {status: null}
+      typing: {status: null},
+      currentQuestionIndex: -1
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.bindSocket = this.bindSocket.bind(this);
@@ -120,7 +134,12 @@ class Room extends Component {
     this.updateMessage = this.updateMessage.bind(this)
   };
   render(){
-    let { isActive, joined, typing } = this.state;
+    let {
+      isActive,
+      joined,
+      typing,
+      currentQuestionIndex
+    } = this.state;
 
     if (joined === null) {
       return (<div className="container-fluid">
@@ -133,11 +152,18 @@ class Room extends Component {
       return <p>Could not join room</p>
     }
     return(
-      <div className="chat-container">
+      <div className="chat-container" style={{
+        backgroundColor: currentQuestionIndex < 10 ? '#f9c296' : currentQuestionIndex < 20 ? '#F99365' : currentQuestionIndex < 30 ? 'F95F31' : 'F95F31'
+      }}>
         <div className="container-fluid">
-          <div>
-            <h1>36 Questions</h1>
-            <p>{this.state.display}</p>
+          <div className="row">
+            <div className="col">
+              <h1>36 Questions</h1>
+              <p>{this.state.display}</p>
+            </div>
+            <div className="col question-index">
+              { currentQuestionIndex > -1 ? <h3>{currentQuestionIndex}/36</h3> : null}
+            </div>
           </div>
           <button className={'btn btn-light on-done ' + (isActive === false ? 'hidden' : isActive === true ? '' : 'loading')} disabled={!isActive} onClick={this.doneAnswering}>
             {isActive === null ? <i className="fas fa-spinner"></i> : null} Done answering!
