@@ -6,20 +6,21 @@ import '../assets/stylesheets/home.css';
 
 class Home extends Component {
   render(){
+    let { user } = this.props;
+    
     return(
       <Parallax pages={2}>
         <ParallaxLayer offset={0} speed={0.5}>
           <Header />
         </ParallaxLayer>
         <ParallaxLayer offset={0.4} speed={0.1}>
-          {this.props.user ? <div className="home-screen">
-            <h1>Welcome, {this.props.user.firstName}.</h1>
+          {user ? <div className="home-screen">
+            <h1>Welcome, {user.firstName}.</h1>
             <hr/>
             <button className="btn-main" onClick={() => window.location='/match'}>GET MATCHED</button>
           </div> : <div className="home-screen">
             <h1>Fall in love in 36 questions</h1>
             <hr/>
-            <p></p>
             <hr/>
             <button className="btn-main" onClick={() => window.location='/signup'}>GET STARTED</button>
           </div>}
@@ -31,6 +32,6 @@ class Home extends Component {
 
 const mapStateToProps = state => ({
   user: state.user
-})
+});
 
 export default connect(mapStateToProps)(Home);
