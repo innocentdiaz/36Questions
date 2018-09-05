@@ -22,8 +22,8 @@ const io = require('socket.io')(server);
 
 require('./lib/routes/auth')(app);
 require('./lib/routes/users')(app);
-require('./lib/routes/matching')(io);
-require('./lib/services/activeRooms')(io);
+require('./lib/routes/matching')(io.of('/api/matching'));
+require('./lib/routes/rooms')(io.of('/api/rooms'));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.resolve(__dirname, 'client', 'build')))
