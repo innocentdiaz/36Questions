@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import TypeWriter from '../components/TypeWriter';
 import Chat from '../components/Chat';
 import io from 'socket.io-client';
 import api from '../api';
@@ -159,7 +160,9 @@ class Room extends Component {
           <div className="row">
             <div className="col">
               <h1>36 Questions</h1>
-              <p>{this.state.display}</p>
+              <h4 className='typewriter'>
+                <TypeWriter text={this.state.display}/>
+              </h4>
             </div>
             <div className="col question-index">
               { currentQuestionIndex > -1 ? <h3>{currentQuestionIndex}/36</h3> : null}
