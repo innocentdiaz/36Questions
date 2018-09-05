@@ -9,16 +9,14 @@ class Chat extends Component {
   render(){
     return(
       <div className="chat">
-        <ul>
         {this.props.data.map((message, i) => {
-          return(<li key={i} className={message.sender === this.props.user.firstName ? 'list-group-item text-right' : 'list-group-item text-left'}>
+          return(<div key={i} className={message.sender === this.props.user.firstName ? 'chat-bubble right' : 'chat-bubble left'}>
             <div className={message.sender === this.props.user.firstName ? "d-flex w-100 justify-content-end" : "d-flex w-100 justify-content-between"}>
               <small>{message.sender}</small>
             </div>
             <p className="mb-1">{message.content}</p>
-          </li>)
+          </div>)
         })}
-        </ul>
       </div>
     );
   }

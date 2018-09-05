@@ -3,16 +3,54 @@
   transition: 6s all ease-in-out;
 }
 .chat {
-  max-height: 50vh;
+  margin-top: 1em;
+  border-top: 2px solid white;
+  max-height: 60vh;
   overflow-y: auto;
   width: 100%;
-}
-.chat ul {
   padding: 0;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
-.chat li {
-  color: #866a7e;
+.chat-bubble {
+  position: relative;
+  padding: .5em;
+  margin-bottom: 1em;
+	background: whitesmoke;
+  border-radius: .4em;
+  list-style:none;
+  color: grey;
+  max-width: 55%;
+  min-width: 25%;
+}
+.chat-bubble.right {
+  align-self: flex-end;
+  margin-right: 12px;
+}
+.chat-bubble.left {
+  margin-left: 12px;
+}
+.chat-bubble:after {
+  content: '';
+	position: absolute;
+	right: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 12px solid transparent;
+	border-left-color: whitesmoke;
+	border-right: 0;
+	margin-top: -12px;
+	margin-right: -12px;
+}
+.chat-bubble.left:after {
+	left: 0;
+	border: 12px solid transparent;
+	border-right-color: whitesmoke;
+	border-left: 0;
+	margin-top: -12px;
+	margin-left: -12px;
 }
 .loading {
   opacity: .7;
@@ -26,4 +64,10 @@
 
 .typewriter {
   font-size: larger;
+}
+
+@media (max-width: 400px) {
+  .chat {
+    max-height: 50vh;
+  }
 }
