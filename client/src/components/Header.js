@@ -4,11 +4,13 @@ import '../assets/stylesheets/header.css';
 
 class Header extends Component {
   render(){
+    let { user } = this.props;
+
     return(
       <div className="header-main">
         <a className="title" href="/"><span id="number">36</span><span id="text">QUESTIONS</span></a>
         {
-          this.props.user ? <a href='account'>Account</a> : <a href='login'>Log in</a>
+          user.authenticated ? <a href='account'>Account</a> : <a href='login'>Log in</a>
         }
       </div>
     );
