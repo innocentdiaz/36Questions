@@ -20,9 +20,9 @@ class App extends Component {
   }
   render() {
     return (
-        <Provider store={redux_store}>
-          <Router />
-        </Provider>
+      <Provider store={redux_store}>
+        <Router />
+      </Provider>
     );
   }
 }
