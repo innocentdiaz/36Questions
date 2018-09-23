@@ -22,6 +22,7 @@ const io = require('socket.io')(server);
 
 require('./lib/routes/auth')(app);
 require('./lib/routes/users')(app);
+require('./lib/routes/upload')(app);
 require('./lib/routes/matching')(io.of('/api/matching'));
 require('./lib/routes/rooms')(io.of('/api/rooms'));
 
