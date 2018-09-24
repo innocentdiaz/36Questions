@@ -12,6 +12,5 @@ The technologies used are:
 * Axios
 * MongoDB / Mongoose
 
-Todo:
-* Integrate actual game after matching
-* Refactor
+*The main app has been developed on mobile on [this](https://github.com/36questions-mobile) repository!*
+This repository will mainly focus on the API rather than the front end.
