@@ -8,6 +8,8 @@ This application aims to match strangers and put them up to the 36 questions tha
 The technologies used are:
 * React
 * Node.js / Express
+* AWS
+* Multer
 * Socket.io
 * Axios
 * MongoDB / Mongoose
