@@ -26,7 +26,8 @@ class SignUp extends Component {
         store.set('TSQ_TOKEN', token);
         window.location = '/'
       } else {
-        this.setState({display: 'Failed to sign up'})
+        let display = res.data && res.data.message && res.data.message.length > 0 ? res.data.message : 'Failed to sign up!'
+        this.setState({ display });
       }
     });
   }
@@ -64,16 +65,17 @@ class SignUp extends Component {
             </div>
             <div className="form-group">
               <label>i am a</label>
-              <select name="gender" className="form-control">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+              <select name="gender" className="form-control" required>
+                <option value={0}>Male</option>
+                <option value={1}>Female</option>
               </select>
             </div>
             <div className="form-group">
-              <label>i am interested in (Can select multiple)</label>
-              <select name="interests" className="form-control">
-                <option value="male">Men</option>
-                <option value="female">Women</option>
+              <label>i am interested in</label>
+              <select name="interests" className="form-control" required>
+                <option value={0}>Men</option>
+                <option value={1}>Women</option>
+                <option value={2}>Both</option>
               </select>
             </div>
             <div className="form-group">
