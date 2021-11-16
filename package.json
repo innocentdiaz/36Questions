@@ -13,7 +13,7 @@
   "author": "JohnCdf",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.320.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^3.0.0",
     "concurrently": "^4.0.1",
     "cors": "^2.8.4",
